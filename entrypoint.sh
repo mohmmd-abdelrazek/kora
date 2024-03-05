@@ -1,13 +1,5 @@
 #!/bin/sh
 
-# Placeholder function for starting Nginx with a temporary config
-# This config should just be enough to respond on port 80, making Render.com recognize it.
-start_nginx_temporarily() {
-    echo "Starting Nginx with temporary configuration..."
-    nginx -c /etc/nginx/nginx_temp.conf
-    # This temporary config might just serve a static file or a simple 200 OK response
-}
-
 # Modified wait_for_service to accommodate service startup sequence
 wait_for_service() {
   SERVICE_HOST=$1
@@ -36,5 +28,4 @@ wait_for_service localhost 5000
 # After confirming backend and frontend readiness, switch to the full Nginx configuration
 # This might involve stopping the temporary Nginx and starting it with the full configuration
 echo "Switching to full Nginx configuration..."
-nginx -s stop
 nginx -g 'daemon off;'
