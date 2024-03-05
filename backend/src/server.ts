@@ -19,13 +19,13 @@ import { sessionMiddleware } from "./config/redisConfig";
 
 const app = express();
 
-// CORS configuration for localhost:3000
-const corsOptions = {
-  origin: "http://localhost:3000", // Allow only http://localhost:3000
-  credentials: true, // Allow cookies to be sent with requests
-};
+// // CORS configuration for localhost:3000
+// const corsOptions = {
+//   origin: "http://localhost:3000", // Allow only http://localhost:3000
+//   credentials: true, // Allow cookies to be sent with requests
+// };
 
-app.use(cors(corsOptions)); // Use CORS with the specified options
+app.use(cors()); // Use CORS with the specified options
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   console.log(`Incoming ${req.method} request to ${req.url}`);
@@ -54,11 +54,11 @@ app.use((req, res, next) => {
 });
 
 // Modular route setup
-app.use("/api/auth", authRoutes);
-app.use("/api/user", userRoutes);
-app.use("/api/", leagueRoutes); // Added '/league' to make the route specific
-app.use("/api/", teamRoutes); // Added '/team' to make the route specific
-app.use("/api/player", playerRoutes);
+app.use("/auth", authRoutes);
+app.use("/user", userRoutes);
+app.use("", leagueRoutes); // Added '/league' to make the route specific
+app.use("", teamRoutes); // Added '/team' to make the route specific
+app.use("/player", playerRoutes);
 
 // Catch-all for unhandled routes
 app.use((req: Request, res: Response) => {
