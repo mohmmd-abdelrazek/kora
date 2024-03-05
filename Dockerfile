@@ -13,9 +13,10 @@ WORKDIR /app
 # Copy the frontend and backend applications
 COPY ./frontend ./frontend
 COPY ./backend ./backend
-COPY nginx.conf /etc/nginx/http.d/default.conf
-COPY entrypoint.sh /entrypoint.sh
+COPY default.conf /etc/nginx/http.d/default.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 COPY nginx_temp.conf /etc/nginx/nginx_temp.conf
+COPY entrypoint.sh /entrypoint.sh
 
 # Build the frontend (Next.js)
 WORKDIR /app/frontend

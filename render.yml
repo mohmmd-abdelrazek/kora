@@ -1,8 +1,0 @@
-services:
-  - type: web
-    name: my-fullstack-app
-    env: docker
-    plan: starter
-    httpPort: 80
-    healthCheckPath: "/"
-    dockerfilePath: "Dockerfile"
