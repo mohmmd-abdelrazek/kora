@@ -15,6 +15,7 @@ COPY ./frontend ./frontend
 COPY ./backend ./backend
 COPY nginx.conf /etc/nginx/http.d/default.conf
 COPY entrypoint.sh /entrypoint.sh
+COPY nginx_temp.conf /etc/nginx/nginx_temp.conf
 
 # Build the frontend (Next.js)
 WORKDIR /app/frontend
