@@ -15,11 +15,11 @@ npm run start &
 # }
 # wait_for_service localhost 3000
 
-# # Start the Next.js application
-# cd /app/backend
-# npm run start &
+# Start the Next.js application
+cd /app/backend
+npm run start &
 
-# # Wait for the frontend service to start
+# Wait for the frontend service to start
 # wait_for_service localhost 5000
 
 # Start Nginx in the foreground
