@@ -4,18 +4,16 @@
   "description": "",
   "main": "src/server.ts",
   "scripts": {
-    "clean": "rm -rf build",
+    "clean": "rm -rf dist",
     "kill-port": "kill-port 5000",
     "build": "npm run clean && tsc",
-    "test": "npm run build && mocha 'build/**/*.spec.js'",
+    "test": "npm run build && mocha 'dist/**/*.spec.js'",
     "test:js": "mocha 'dist/**/*.spec.js'",
     "tsc": "tsc",
     "dev": "nodemon --watch src --ext ts,json --exec \"ts-node -r tsconfig-paths/register src/server.ts\"",
-    "start:dev": "nodemon --watch build --ext js,json --exec \"node dist/server.js\"",
-    "prestart": "npm run build",
+    "start:dev": "nodemon --watch dist --ext js,json --exec \"node dist/server.js\"",
     "start": "node dist/server.js",
-    "lint": "eslint . --ext .ts",
-    "prepare": "npm run build"
+    "lint": "eslint . --ext .ts"
   },
   "keywords": [],
   "author": "",

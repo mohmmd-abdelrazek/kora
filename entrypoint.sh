@@ -1,13 +1,9 @@
 #!/bin/sh
 
-# Start the Next.js application
-cd /app/frontend
-npm run start &
-
 # Start the Express.js application
 cd /app/backend
 npm run start &
-
+# Wait for the backend service to start
 wait_for_service() {
   SERVICE_HOST=$1
   SERVICE_PORT=$2
@@ -17,9 +13,13 @@ wait_for_service() {
   done
   echo "${SERVICE_HOST}:${SERVICE_PORT} is up and running."
 }
+wait_for_service localhost 5000
 
-# Wait for the backend and frontend services to start
-wait_for_service localhost 5000 # Adjust for your backend's port
+# Start the Next.js application
+cd /app/frontend
+npm run start &
+
+# Wait for the frontend service to start
 wait_for_service localhost 3000
 
 # Start Nginx in the foreground
