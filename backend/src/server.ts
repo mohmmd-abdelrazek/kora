@@ -54,11 +54,11 @@ app.use((req, res, next) => {
 });
 
 // Modular route setup
-app.use("/auth", authRoutes);
-app.use("/user", userRoutes);
-app.use("", leagueRoutes); // Added '/league' to make the route specific
-app.use("", teamRoutes); // Added '/team' to make the route specific
-app.use("/player", playerRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api", leagueRoutes); // Added '/league' to make the route specific
+app.use("/api", teamRoutes); // Added '/team' to make the route specific
+app.use("/api/player", playerRoutes);
 
 // Catch-all for unhandled routes
 app.use((req: Request, res: Response) => {
@@ -73,7 +73,7 @@ app.use((err: Error, req: Request, res: Response) => {
 });
 
 // Start the server
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
