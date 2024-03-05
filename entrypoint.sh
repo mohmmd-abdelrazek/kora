@@ -11,17 +11,17 @@ wait_for_service() {
   echo "${SERVICE_HOST}:${SERVICE_PORT} is up and running."
 }
 
-# Start the Express.js (backend) application
-echo "Starting backend service..."
-cd /app/backend
-npm run start &
-wait_for_service localhost 5000
-
 # Start the Next.js (frontend) application
 echo "Starting frontend service..."
 cd /app/frontend
 npm run start &
 wait_for_service localhost 3000
+
+# Start the Express.js (backend) application
+echo "Starting backend service..."
+cd /app/backend
+npm run start &
+wait_for_service localhost 5000
 
 # Start Nginx in the foreground
 echo "Starting Nginx..."
