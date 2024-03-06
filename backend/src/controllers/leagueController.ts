@@ -25,9 +25,7 @@ export const createLeague = async (req: Request, res: Response) => {
 
         const [hours, minutes] = startTime.split(':').map(Number);
         date.setHours(hours, minutes);
-        console.log('Combined DateTime:', date);
         const dateTimeISO = date.toISOString();
-        console.log('Iso DateTime:', dateTimeISO);
 
 
     const leagueInsertQuery =
