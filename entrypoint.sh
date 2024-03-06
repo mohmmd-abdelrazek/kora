@@ -4,7 +4,7 @@ wait_for_service() {
   SERVICE_PORT=$2
   echo "Waiting for ${SERVICE_HOST}:${SERVICE_PORT} to be ready..."
   while ! nc -z ${SERVICE_HOST} ${SERVICE_PORT}; do
-    sleep 1
+    sleep 0.5
   done
   echo "${SERVICE_HOST}:${SERVICE_PORT} is up and running."
 }
@@ -12,12 +12,12 @@ wait_for_service() {
 echo "Starting Nginx with the initial configuration..."
 nginx -g 'daemon off;' &
 
-echo "Starting frontend service..."
-cd /app/frontend
-npm run start &
-
 echo "Starting backend service..."
 cd /app/backend
+npm run start &
+
+echo "Starting frontend service..."
+cd /app/frontend
 npm run start &
 
 wait_for_service localhost 3000
@@ -27,5 +27,5 @@ echo "Reloading Nginx..."
 cp /etc/nginx/final.conf /etc/nginx/nginx.conf
 nginx -s reload
 
+echo "service is up and running."
 wait
-echo "All services are up and running."
