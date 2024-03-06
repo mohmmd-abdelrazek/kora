@@ -12,9 +12,6 @@ wait_for_service() {
 echo "Starting Nginx with the initial configuration..."
 nginx -g 'daemon off;' &
 
-echo "Waiting a bit for Nginx to initialize..."
-sleep 10
-
 echo "Starting frontend service..."
 cd /app/frontend
 npm run start &

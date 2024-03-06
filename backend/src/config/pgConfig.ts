@@ -8,7 +8,7 @@ if (!connectionString) {
 
 const pool = new Pool({
   connectionString: connectionString,
-  ssl: { rejectUnauthorized: false },
+  ssl: { rejectUnauthorized: process.env.EXPRESS_ENV === "production" },
 });
 
 export default pool;
