@@ -10,7 +10,7 @@ wait_for_service() {
 }
 
 echo "Starting Nginx with the initial configuration..."
-nginx
+nginx -g 'daemon off;' &
 
 echo "Starting frontend service..."
 cd /app/frontend
