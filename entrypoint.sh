@@ -4,7 +4,7 @@ wait_for_service() {
   SERVICE_PORT=$2
   echo "Waiting for ${SERVICE_HOST}:${SERVICE_PORT} to be ready..."
   while ! nc -z ${SERVICE_HOST} ${SERVICE_PORT}; do
-    sleep 0.5
+    sleep 1
   done
   echo "${SERVICE_HOST}:${SERVICE_PORT} is up and running."
 }
@@ -27,4 +27,5 @@ echo "Reloading Nginx..."
 cp /etc/nginx/final.conf /etc/nginx/nginx.conf
 nginx -s reload
 
+wait
 echo "All services are up and running."
