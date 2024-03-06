@@ -15,7 +15,6 @@ export const validateSignup = [
   },
 ];
 
-// Middleware to log requests
 export const requestLogger = (req: Request, res: Response, next: NextFunction) => {
   console.log('Method:', req.method);
   console.log('Path:  ', req.path);
@@ -24,12 +23,10 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction) =
   next();
 };
 
-// Middleware for handling unknown endpoints
 export const unknownEndpoint = (req: Request, res: Response) => {
   res.status(404).send({ error: 'unknown endpoint' });
 };
 
-// Middleware for handling errors
 export const errorHandler = (error: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(error.message);
 

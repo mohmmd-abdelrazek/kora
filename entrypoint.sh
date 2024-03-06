@@ -1,5 +1,4 @@
 #!/bin/sh
-
 # Modified wait_for_service to accommodate service startup sequence
 wait_for_service() {
   SERVICE_HOST=$1
@@ -11,10 +10,6 @@ wait_for_service() {
   echo "${SERVICE_HOST}:${SERVICE_PORT} is up and running."
 }
 
-# Actual script execution starts here
-echo "Starting temporary Nginx to capture port 80..."
-start_nginx_temporarily
-
 echo "Starting frontend service..."
 cd /app/frontend
 npm run start &
@@ -25,7 +20,5 @@ cd /app/backend
 npm run start &
 wait_for_service localhost 5000
 
-# After confirming backend and frontend readiness, switch to the full Nginx configuration
-# This might involve stopping the temporary Nginx and starting it with the full configuration
-echo "Switching to full Nginx configuration..."
+echo "Starting Nginx..."
 nginx -g 'daemon off;'

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import pool from "../config/pgConfig";
 
 export const getTeamsByLeague = async (req: Request, res: Response) => {
-  const { leagueId } = req.params; // Assuming the route parameter is named `leagueId`
+  const { leagueId } = req.params;
 
   try {
     const { rows } = await pool.query(

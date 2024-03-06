@@ -2,7 +2,7 @@ export interface AppUser {
   id: number;
   name: string;
   email: string;
-  password: string; // Note: In real applications, ensure this is hashed
+  password: string; 
   created_at?: Date;
   updated_at?: Date;
   email_verified?: boolean;

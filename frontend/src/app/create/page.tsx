@@ -4,18 +4,20 @@ import { useRouter } from "next/navigation";
 import { axiosInstance } from "@/src/services/fetcher";
 import EditTeamsModal from "@/src/components/TeamsNamesModal";
 import withAuth from "@/src/utils/withAuth";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface LeagueFormData {
   leagueName: string;
   numberOfTeams: number;
   playersPerTeam: number;
-  date: string; // To capture only the date
-  startTime: string; // To capture only the time
-  matchDuration: number; // Duration in minutes
+  dateString: Date | null;
+  startTime: string;
+  matchDuration: number;
   breakDuration: number;
-  totalPlayTime: number; // Total available play time in minutes
-  numberOfPlaygrounds: number; // Number of available playgrounds
-  teamNames: string[]; // Team names
+  totalPlayTime: number;
+  numberOfPlaygrounds: number;
+  teamNames: string[];
 }
 
 const CreateLeaguePage: React.FC = () => {
@@ -23,13 +25,13 @@ const CreateLeaguePage: React.FC = () => {
     leagueName: "",
     numberOfTeams: 0,
     playersPerTeam: 0,
-    date: "",
+    dateString: new Date(),
     startTime: "",
     matchDuration: 0,
     breakDuration: 0,
     totalPlayTime: 1,
     numberOfPlaygrounds: 1,
-    teamNames: [], // Initialize as empty array
+    teamNames: [],
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [weekday, setWeekday] = useState("");
@@ -38,6 +40,8 @@ const CreateLeaguePage: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    if (name === "date") return;
+
     let updatedValue: any = value;
     if (
       name === "numberOfTeams" ||
@@ -46,37 +50,42 @@ const CreateLeaguePage: React.FC = () => {
     ) {
       updatedValue = parseInt(value);
       if (name === "numberOfTeams") {
-        // Update team names state when number of teams changes
         const newTeamNames = Array(updatedValue)
           .fill(null)
           .map((_, index) => formData.teamNames[index] || `فريق ${index + 1}`);
         setFormData((prev) => ({ ...prev, teamNames: newTeamNames }));
       }
-    } else if (name === "date") {
-      // Calculate the weekday
-      const date = new Date(value);
-      const days = [
-        "الأحد",
-        "الاثنين",
-        "الثلاثاء",
-        "الأربعاء",
-        "الخميس",
-        "الجمعة",
-        "السبت",
-      ];
-      setWeekday(days[date.getDay()]);
-    }
+    } 
     setFormData((prev) => ({ ...prev, [name]: updatedValue }));
+  };
+
+  const handleDateChange = (dateString: Date | null) => {
+    const days = [
+      "الأحد",
+      "الاثنين",
+      "الثلاثاء",
+      "الأربعاء",
+      "الخميس",
+      "الجمعة",
+      "السبت",
+    ];
+    setWeekday(dateString ? days[dateString.getDay()] : "");
+    setFormData((prev) => ({
+      ...prev,
+      dateString,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const dateToSend = formData.dateString ? formData.dateString.toISOString() : null;
     const payload = {
       ...formData,
-      teamNames: formData.teamNames.filter((name) => name.trim() !== ""), // Filter out empty team names
+      dateString: dateToSend,
+      teamNames: formData.teamNames.filter((name) => name.trim() !== ""),
     };
     try {
-      const response = await axiosInstance.post("/league", payload); // Adjust API endpoint as needed
+      const response = await axiosInstance.post("/league", payload);
       router.push(`/league/${response.data.league.id}`);
     } catch (error) {
       console.error("Failed to create league:", error);
@@ -159,14 +168,14 @@ const CreateLeaguePage: React.FC = () => {
           >
             تاريخ البداية
           </label>
-          <input
-            type="date"
-            name="date"
-            required
+          <DatePicker
+            id="date"
+            selected={formData.dateString}
+            onChange={handleDateChange}
+            dateFormat="dd/MM/yyyy"
             className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 leading-tight shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
-            onChange={handleChange}
           />
-          <span>{weekday}</span> {/* Display the calculated weekday here */}
+          <span>{weekday}</span>
         </div>
         <div>
           <label
@@ -204,7 +213,7 @@ const CreateLeaguePage: React.FC = () => {
             htmlFor="breakDuration"
             className="block text-sm font-medium text-gray-700"
           >
-            Break Duration (minutes)
+            مدة الراحة (بالدقائق)
           </label>
           <input
             type="number"

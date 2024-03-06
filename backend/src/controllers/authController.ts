@@ -1,13 +1,11 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import passport from "passport";
-import pool from "../config/pgConfig"; // Assuming your database pool export
+import pool from "../config/pgConfig"; 
 
-// User signup
 export const signup = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
   try {
-    // Check for existing user
     const existingUser = await pool.query(
       "SELECT * FROM users WHERE email = $1",
       [email]
@@ -16,13 +14,11 @@ export const signup = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Email already in use." });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(
       password,
       process.env.BCRYPT_SALT_ROUNDS || 12
     );
 
-    // Insert new user into the database
     const newUser = await pool.query(
       "INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id, name, email",
       [name, email, hashedPassword]
@@ -39,9 +35,7 @@ export const signup = async (req: Request, res: Response) => {
   }
 };
 
-// User login - handled by Passport's local strategy; this is just for demonstration
 export const login = (req: Request, res: Response) => {
-  // Authentication is actually handled by Passport before this function is called
   console.log('Sign-in request received:', req.body);
   if (req.user) {
     res.status(200).json({ message: "Login successful", user: req.user });
@@ -50,16 +44,14 @@ export const login = (req: Request, res: Response) => {
   }
 };
 
-// User logout
 export const logout = (req: Request, res: Response) => {
   req.logout(() => {
     res.status(200).json({ success: true, message: "Logout successful" });
   });
 };
 
-// Google auth callback
-export const googleCallback = passport.authenticate("google");
-
 export const status = (req: Request, res: Response) => {
   res.status(200).json({ isAuthenticated: req.isAuthenticated(), user: req.user });
 };
+
+export const googleCallback = passport.authenticate("google");

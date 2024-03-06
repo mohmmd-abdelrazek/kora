@@ -45,8 +45,6 @@ export const updatePlayer = async (req: Request, res: Response) => {
   const { name, position } = req.body;
 
   try {
-    // Example SQL query - adjust according to your schema
-    // Assuming 'id' can be derived from `teamId` and `playerIndex`
     const query = `
       UPDATE players
       SET name = $1, position = $2

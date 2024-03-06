@@ -5,10 +5,8 @@ import { validateSignup } from "../middleware/middleware";
 
 const router = express.Router();
 
-// Sign up route
 router.post("/signup", validateSignup, authController.signup);
 
-// Login route
 router.post("/login", (req, res, next) => {
   passport.authenticate(
     "local",
@@ -20,7 +18,6 @@ router.post("/login", (req, res, next) => {
         });
       }
       if (!user) {
-        // Send the message from the strategy to the frontend
         return res.status(401).json({ success: false, message: info.message });
       }
       req.login(user, (loginErr) => {
@@ -29,7 +26,6 @@ router.post("/login", (req, res, next) => {
             .status(500)
             .json({ success: false, message: "Failed to log in user." });
         }
-        // Successfully authenticated
         return res
           .status(200)
           .json({ success: true, message: "Login successful", user });
@@ -38,10 +34,8 @@ router.post("/login", (req, res, next) => {
   )(req, res, next);
 });
 
-// Logout route
 router.get("/logout", authController.logout);
 
-// Google OAuth routes
 // router.get(
 //   "/google",
 //   passport.authenticate("google", { scope: ["profile", "email"] })

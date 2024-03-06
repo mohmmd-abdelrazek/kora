@@ -5,7 +5,7 @@ import Image from "next/image";
 import ball from "@/public/icons/football.png";
 import Pagination from "@/src/components/Pagination";
 import HomeButton from "@/src/components/HomeButton";
-import AdminButton from "@/src/components/AdminButton";
+import AdminButton from "@/src/components/MatchesTableButton";
 import { Team } from "@/src/types/team";
 import TeamSection from "@/src/components/TeamSection";
 import LoadingIndicator from "@/src/components/LoadingIndicator";

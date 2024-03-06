@@ -1,4 +1,3 @@
-// controllers/leagueController.ts
 import { Request, Response } from "express";
 import pool from "../config/pgConfig";
 
@@ -7,7 +6,7 @@ export const createLeague = async (req: Request, res: Response) => {
     leagueName,
     numberOfTeams,
     playersPerTeam,
-    date,
+    dateString,
     startTime,
     matchDuration,
     breakDuration,
@@ -18,18 +17,26 @@ export const createLeague = async (req: Request, res: Response) => {
   const userId = req.user?.id;
 
   try {
-    // Begin transaction
     await pool.query("BEGIN");
+    const date = new Date(dateString);
+        if (isNaN(date.getTime())) {
+            return res.status(400).json({ message: "Invalid date provided." });
+        }
 
-    // Insert the league into the leagues table
+        const [hours, minutes] = startTime.split(':').map(Number);
+        date.setHours(hours, minutes);
+        console.log('Combined DateTime:', date);
+        const dateTimeISO = date.toISOString();
+        console.log('Iso DateTime:', dateTimeISO);
+
+
     const leagueInsertQuery =
-      "INSERT INTO leagues(name, number_of_teams, players_per_team, date, start_time, match_duration, break_duration, total_time, number_of_grounds, user_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *";
+      "INSERT INTO leagues(name, number_of_teams, players_per_team, start_timestamp, match_duration, break_duration, total_time, number_of_grounds, user_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *";
     const leagueValues = [
       leagueName,
       numberOfTeams,
       playersPerTeam,
-      date,
-      startTime,
+      dateTimeISO,
       matchDuration,
       breakDuration,
       totalPlayTime,
@@ -40,13 +47,11 @@ export const createLeague = async (req: Request, res: Response) => {
     const league = leagueResult.rows[0];
     const leagueId = league.id;
 
-    // Insert each team into the teams table
     const teamInsertQuery = "INSERT INTO teams(name, league_id) VALUES($1, $2)";
     for (const teamName of teamNames) {
       await pool.query(teamInsertQuery, [teamName, leagueId]);
     }
 
-    // Commit transaction
     await pool.query("COMMIT");
 
     res.status(201).json({
@@ -54,7 +59,6 @@ export const createLeague = async (req: Request, res: Response) => {
       league: league,
     });
   } catch (error) {
-    // Rollback in case of error
     await pool.query("ROLLBACK");
     console.error("Failed to create league and teams:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -126,8 +130,6 @@ export const generateSchedule = async (req: Request, res: Response) => {
     const totalPlayTimeMs = totalTime * 60000;
     const matchTotalDurationMs = (matchDuration + breakDuration) * 60000;
 
-    // Assuming startTimestamp is already a Date object;
-    // if not, you might need to parse it: new Date(startTimestamp)
     let currentTime = new Date(startTime);
     const endTime = new Date(currentTime.getTime() + totalPlayTimeMs);
 
@@ -141,13 +143,11 @@ export const generateSchedule = async (req: Request, res: Response) => {
 
     const schedule = [];
     let round = 1;
-    // const rounds = teams.length - 1; // Total rounds in a single round-robin
 
     for (let currentRound = 0; ; currentRound++) {
       for (let match = 0; match < teams.length / 2; match++) {
         if (currentTime.getTime() + matchTotalDurationMs > endTime.getTime()) break;
 
-        // Calculate match pairings
         const homeTeam = teams[match];
         const awayTeam = teams[teams.length - 1 - match];
 
@@ -169,7 +169,6 @@ export const generateSchedule = async (req: Request, res: Response) => {
         currentTime = new Date(currentTime.getTime() + matchTotalDurationMs);
       }
 
-      // Rotate teams for the next round, keeping the first team fixed
       teams = [teams[0], ...teams.slice(-1), ...teams.slice(1, -1)];
 
       round++;

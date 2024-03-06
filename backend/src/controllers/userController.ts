@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import pool from "../config/pgConfig"; // Database connection
+import pool from "../config/pgConfig"; 
 
-// Get user profile
 export const getUserProfile = async (req: Request, res: Response) => {
   if (!req.user) {
     return res.status(401).send("User is not authenticated");
@@ -23,9 +22,8 @@ export const getUserProfile = async (req: Request, res: Response) => {
   }
 };
 
-// Update user profile
 export const updateUserProfile = async (req: Request, res: Response) => {
-  const { name, email } = req.body; // Add other fields as necessary
+  const { name, email } = req.body; 
   if (!req.user) {
     return res.status(401).send("User is not authenticated");
   }

@@ -2,7 +2,7 @@ import Link from "next/link";
 import admin from "@/public/icons/admin.png";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-const AdminButton = () => {
+const MatchesTableButton = () => {
   const pathname = usePathname();
   return (
     <Link
@@ -17,4 +17,4 @@ const AdminButton = () => {
   )
 }
 
-export default AdminButton
+export default MatchesTableButton
