@@ -1,3 +1,4 @@
+#!/bin/sh
 wait_for_service() {
   SERVICE_HOST=$1
   SERVICE_PORT=$2
