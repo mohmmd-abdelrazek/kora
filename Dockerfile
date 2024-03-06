@@ -6,7 +6,8 @@ RUN mkdir -p /run/nginx
 WORKDIR /app
 COPY ./frontend ./frontend
 COPY ./backend ./backend
-COPY nginx.conf /etc/nginx/http.d/default.conf
+COPY nginx/initial.conf /etc/nginx/nginx.conf
+COPY nginx/final.conf /etc/nginx/final.conf
 COPY entrypoint.sh /entrypoint.sh
 
 WORKDIR /app/frontend
