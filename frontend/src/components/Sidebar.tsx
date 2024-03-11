@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { axiosInstance } from '../services/fetcher';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -8,6 +9,14 @@ interface SidebarProps {
 
 const Sidebar = ({ isOpen, toggle, isLoggedIn } : SidebarProps) => {
   if (!isOpen) return null;
+  const handleLogout = async () => {
+    try {
+      const result = await axiosInstance("/auth/logout");
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   return (
     <div className="md:hidden bg-gray-700 text-white p-4 absolute top-0 left-0 h-full w-64 z-50 shadow-lg">
@@ -17,7 +26,7 @@ const Sidebar = ({ isOpen, toggle, isLoggedIn } : SidebarProps) => {
           <>
             <Link href="/create" className="hover:text-gray-300 transition-colors">Create</Link>
             <Link href="/my-pages" className="hover:text-gray-300 transition-colors">My Pages</Link>
-            <button onClick={() => console.log('Log out')} className="text-left w-full bg-red-500 hover:bg-red-700 transition-colors text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Log Out</button>
+            <button onClick={handleLogout} className="text-left w-full bg-red-500 hover:bg-red-700 transition-colors text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Log Out</button>
           </>
         ) : (
           <>

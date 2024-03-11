@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Header2 from "@/src/components/Header";
+import Header from "@/src/components/Header";
 import Providers from "./providers";
 
 export const metadata: Metadata = {
@@ -10,16 +10,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  params: {locale}
 }: {
   children: React.ReactNode;
+  params: {locale: string};
 }) {
   return (
-    <html lang="ar" dir="rtl">
+    <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
       <body className="flex flex-col">
         <Providers>
-          <div className="">
-            <Header2 />
-          </div>
+            <Header />
           <div className="flex flex-1">{children}</div>
         </Providers>
       </body>

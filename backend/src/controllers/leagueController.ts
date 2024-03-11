@@ -19,14 +19,13 @@ export const createLeague = async (req: Request, res: Response) => {
   try {
     await pool.query("BEGIN");
     const date = new Date(dateString);
-        if (isNaN(date.getTime())) {
-            return res.status(400).json({ message: "Invalid date provided." });
-        }
+    if (isNaN(date.getTime())) {
+      return res.status(400).json({ message: "Invalid date provided." });
+    }
 
-        const [hours, minutes] = startTime.split(':').map(Number);
-        date.setHours(hours, minutes);
-        const dateTimeISO = date.toISOString();
-
+    const [hours, minutes] = startTime.split(":").map(Number);
+    date.setHours(hours, minutes);
+    const dateTimeISO = date.toISOString();
 
     const leagueInsertQuery =
       "INSERT INTO leagues(name, number_of_teams, players_per_team, start_timestamp, match_duration, break_duration, total_time, number_of_grounds, user_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *";
@@ -45,6 +44,13 @@ export const createLeague = async (req: Request, res: Response) => {
     const league = leagueResult.rows[0];
     const leagueId = league.id;
 
+    const leagueSlug = `${leagueName
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9\u0621-\u064A-]+/g, "")}-${leagueId}`;
+    const updateQuery = "UPDATE leagues SET slug = $1 WHERE id = $2";
+    await pool.query(updateQuery, [leagueSlug, leagueId]);
+
     const teamInsertQuery = "INSERT INTO teams(name, league_id) VALUES($1, $2)";
     for (const teamName of teamNames) {
       await pool.query(teamInsertQuery, [teamName, leagueId]);
@@ -55,6 +61,7 @@ export const createLeague = async (req: Request, res: Response) => {
     res.status(201).json({
       message: "League and teams created successfully",
       league: league,
+      leagueSlug: leagueSlug,
     });
   } catch (error) {
     await pool.query("ROLLBACK");
@@ -124,14 +131,14 @@ export const generateSchedule = async (req: Request, res: Response) => {
       start_timestamp: startTime,
     } = league;
 
-
     const totalPlayTimeMs = totalTime * 60000;
     const matchTotalDurationMs = (matchDuration + breakDuration) * 60000;
 
     let currentTime = new Date(startTime);
     const endTime = new Date(currentTime.getTime() + totalPlayTimeMs);
 
-    const teamsQuery = "SELECT * FROM teams WHERE league_id = $1 ORDER BY team_id";
+    const teamsQuery =
+      "SELECT * FROM teams WHERE league_id = $1 ORDER BY team_id";
     const teamsRes = await pool.query(teamsQuery, [leagueId]);
     let teams = teamsRes.rows;
 
@@ -144,7 +151,8 @@ export const generateSchedule = async (req: Request, res: Response) => {
 
     for (let currentRound = 0; ; currentRound++) {
       for (let match = 0; match < teams.length / 2; match++) {
-        if (currentTime.getTime() + matchTotalDurationMs > endTime.getTime()) break;
+        if (currentTime.getTime() + matchTotalDurationMs > endTime.getTime())
+          break;
 
         const homeTeam = teams[match];
         const awayTeam = teams[teams.length - 1 - match];
@@ -160,7 +168,9 @@ export const generateSchedule = async (req: Request, res: Response) => {
           awayTeam: awayTeam.name,
           playground: playgroundName,
           startTime: new Date(currentTime).toLocaleString(),
-          endTime: new Date(currentTime.getTime() + matchDuration * 60000).toLocaleString(),
+          endTime: new Date(
+            currentTime.getTime() + matchDuration * 60000
+          ).toLocaleString(),
           type: "Match",
         });
 
@@ -170,7 +180,8 @@ export const generateSchedule = async (req: Request, res: Response) => {
       teams = [teams[0], ...teams.slice(-1), ...teams.slice(1, -1)];
 
       round++;
-      if (currentTime.getTime() + matchTotalDurationMs > endTime.getTime()) break;
+      if (currentTime.getTime() + matchTotalDurationMs > endTime.getTime())
+        break;
     }
 
     res.json(schedule);
@@ -179,8 +190,3 @@ export const generateSchedule = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Failed to generate schedule" });
   }
 };
-
-
-
-
-

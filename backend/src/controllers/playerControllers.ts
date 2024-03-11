@@ -68,7 +68,7 @@ export const updatePlayer = async (req: Request, res: Response) => {
 };
 
 export const deletePlayer = async (req: Request, res: Response) => {
-  const { teamId, playerIndex } = req.params; // Assuming the URL parameter is named 'playerId'
+  const { teamId, playerIndex } = req.params;
 
   try {
     const deleteQuery = 'DELETE FROM players WHERE team_id = $1 AND player_index = $2 RETURNING *;';

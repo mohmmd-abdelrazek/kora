@@ -17,7 +17,7 @@ const Signup = () => {
   const validateEmail = (email: string): boolean => /\S+@\S+\.\S+/.test(email);
 
   const validatePassword = (password: string): boolean =>
-    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password); // Minimum eight characters, at least one letter and one number
+    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password); 
 
   const validateForm = (): boolean => {
     const newErrors: string[] = [];
@@ -49,12 +49,10 @@ const Signup = () => {
       const response = await axiosInstance.post("/auth/signup", formData);
       const logout = await axiosInstance.get("/auth/logout");
       setSuccessMessage("Signup successful! Redirecting...");
-      // Clear any previous errors
       setErrors([]);
-      // Redirect user on success
       setTimeout(() => {
         router.push("/");
-      }, 2000); // Wait a couple of seconds before redirecting for user to read the message
+      }, 2000); 
     } catch (error) {
       if (isAxiosError(error)) {
         setErrors([

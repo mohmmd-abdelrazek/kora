@@ -1,16 +1,14 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { isAxiosError } from "axios";
 import useRedirectIfAuthenticated from "@/src/hooks/useRedirectIfAuthenticated";
 import { axiosInstance } from "@/src/services/fetcher";
 
 function Signin() {
-  useRedirectIfAuthenticated("/admin");
+  useRedirectIfAuthenticated("/");
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -25,9 +23,7 @@ function Signin() {
     try {
       const response = await axiosInstance.post("/auth/login", credentials);
       setIsLoading(false);
-      // Optionally save the auth token here, e.g., to localStorage
       window.location.href = "/";
-      // Redirect to dashboard on success
     } catch (error) {
       setIsLoading(false);
       if (isAxiosError(error)) {

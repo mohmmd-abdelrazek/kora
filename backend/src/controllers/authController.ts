@@ -14,10 +14,9 @@ export const signup = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Email already in use." });
     }
 
-    const hashedPassword = await bcrypt.hash(
-      password,
-      process.env.BCRYPT_SALT_ROUNDS || 12
-    );
+    const saltRounds: number = parseInt(process.env.BCRYPT_SALT_ROUNDS || '12', 10);
+
+    const hashedPassword: string = await bcrypt.hash(password, saltRounds);
 
     const newUser = await pool.query(
       "INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id, name, email",

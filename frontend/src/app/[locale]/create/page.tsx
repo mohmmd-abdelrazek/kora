@@ -86,7 +86,7 @@ const CreateLeaguePage: React.FC = () => {
     };
     try {
       const response = await axiosInstance.post("/league", payload);
-      router.push(`/league/${response.data.league.id}`);
+      router.push(`/league/${response.data.leagueSlug}`);
     } catch (error) {
       console.error("Failed to create league:", error);
     }

@@ -36,8 +36,10 @@ router.post("/login", (req, res, next) => {
 
 router.get("/logout", authController.logout);
 
+router.get("/status", authController.status);
+
 // router.get(
-//   "/google",
+  //   "/google",
 //   passport.authenticate("google", { scope: ["profile", "email"] })
 // );
 
@@ -47,6 +49,5 @@ router.get("/logout", authController.logout);
 //   authController.googleCallback
 // );
 
-router.get("/status", authController.status);
 
 export default router;

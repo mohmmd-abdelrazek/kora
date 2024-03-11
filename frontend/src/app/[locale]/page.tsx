@@ -1,6 +1,6 @@
 "use client";
-import Link from "next/link";
-import { useAuth } from "../services/queries";
+import { Link } from "@/src/navigation";
+import { useAuth } from "@/src/services/queries";
 
 const LandingPage = () => {
   const { data, isLoading, error } = useAuth();
@@ -14,7 +14,7 @@ const LandingPage = () => {
         {data?.isAuthenticated ? (
           <div>
             <h1 className="mb-4 text-4xl">مرحبا, {data.user.name}!</h1>
-            <div className="flex gap-4 justify-center items-center">
+            <div className="flex items-center justify-center gap-4">
               <Link
                 href="/create"
                 className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"

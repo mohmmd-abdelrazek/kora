@@ -1,0 +1,29 @@
+{
+  "Index": {
+    "leagueName": "League Name",
+    "numberOfTeams": "Number of Teams",
+    "playersPerTeam": "Players per Team",
+    "date": "Start Date",
+    "startTime": "Start Time",
+    "matchDuration": "Match Duration (minutes)",
+    "breakDuration": "Break Duration (minutes)",
+    "totalPlayTime": "Total Play Time (minutes)",
+    "numberOfPlaygrounds": "Number of Playgrounds",
+    "editTeamNames": "Edit Team Names",
+    "submit": "Submit",
+    "joinTeamNow": "Join a Team Now",
+    "ifAllTeamsFull": "If all teams are full, you cannot subscribe. Try again next time.",
+    "team": "Team",
+    "home": "Home",
+    "create": "Create",
+    "myLeagues": "My Leagues",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "logOut": "Log Out",
+    "logo": "Dawry"
+  },
+  "LocaleSwitcher": {
+    "label": "Change language",
+    "locale": "{locale, select, ar {AR} en {EN} other {Unknown}}"
+  }
+}

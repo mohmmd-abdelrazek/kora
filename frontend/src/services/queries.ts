@@ -1,29 +1,40 @@
 import useSWR from "swr";
-import { Page } from "../types/page";
+import { League } from "../types/league";
 import { Match } from "../types/match";
 import { useParams } from "next/navigation";
+
+const extractLeagueId = (leagueSlug: string | string[] | undefined): number | null => {
+  if (typeof leagueSlug !== 'string') return null;
+  
+  const possibleId = leagueSlug.split('-').pop();
+  const leagueId = Number(possibleId);
+  
+  return !isNaN(leagueId) && leagueId > 0 ? leagueId : null;
+};
 
 export function useAuth() {
   return useSWR("/auth/status");
 }
 
 export function useLeagues() {
-  return useSWR<Page[]>("/leagues");
+  return useSWR<League[]>("/leagues");
 }
 
 export function useLeague() {
-  const { leagueId } = useParams();
-  return useSWR<Page>(leagueId ? `/league/${leagueId}` : null);
+  const { leagueSlug } = useParams();
+  const leagueId = extractLeagueId(leagueSlug);
+  return useSWR<League>(leagueId ? `/league/${leagueId}` : null);
 }
 
 export function useTeams() {
-  const { leagueId } = useParams();
+  const { leagueSlug } = useParams();
+  const leagueId = extractLeagueId(leagueSlug);  
   return useSWR(leagueId ? `/teams/${leagueId}` : null);
 }
 
 export function useSchedule() {
-  const { leagueId } = useParams();
-  console.log(leagueId)
+  const { leagueSlug } = useParams();
+  const leagueId = extractLeagueId(leagueSlug); 
+  console.log(leagueSlug);
   return useSWR(leagueId ? `/league/${leagueId}/schedule` : null);
-
 }

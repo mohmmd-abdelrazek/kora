@@ -1,5 +1,5 @@
 "use client";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Tab from "@/src/components/Tab";
 import Image from "next/image";
 import ball from "@/public/icons/football.png";

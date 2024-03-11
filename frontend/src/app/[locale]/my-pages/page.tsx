@@ -18,7 +18,7 @@ const UserPages = () => {
         {pages?.map((page) => (
           <li key={page.id} className="mb-2">
             <a
-              href={`/league/${page.id}`}
+              href={`/league/${page.slug}`}
               className="text-blue-500 hover:underline"
             >
               {page.name}

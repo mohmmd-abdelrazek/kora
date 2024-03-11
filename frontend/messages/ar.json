@@ -1,0 +1,30 @@
+{
+  "Index": {
+    "leagueName": "اسم الدوري",
+    "numberOfTeams": "عدد الفرق",
+    "playersPerTeam": "عدد اللاعبين في الفريق",
+    "date": "تاريخ البداية",
+    "startTime": "وقت البداية",
+    "matchDuration": "مدة المباراة (بالدقائق)",
+    "breakDuration": "مدة الراحة (بالدقائق)",
+    "totalPlayTime": "الوقت الكلي للعب (بالدقائق)",
+    "numberOfPlaygrounds": "عدد الملاعب المتاحة",
+    "editTeamNames": "عدل أسماء الفرق",
+    "submit": "تسجيل",
+    "joinTeamNow": "انضم إلى فريق الآن",
+    "ifAllTeamsFull": "اذا كانت جميع الفرق ممتلئة فلا يمكنك الاشتراك. يمكنك المحاولة في مرة قادمة",
+    "team": "فريق",
+    "home": "الرئيسية",
+    "create": "أنشئ",
+    "myLeagues": "دورياتي",
+    "signIn": "تسجيل دخول",
+    "signUp": "مستخدم جديد",
+    "logOut": "تسجيل الخروج",
+    "logo": "دوري"
+  },
+  "LocaleSwitcher": {
+    "label": "Change language",
+    "locale": "{locale, select, ar {العربية} en {الانجليزية} other {Unknown}}"
+  }
+}
+  

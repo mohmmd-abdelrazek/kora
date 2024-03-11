@@ -1,6 +1,5 @@
-import useSWR from "swr";
 import InputField from "./PlayerInput";
-import { useParams } from "next/navigation";
+import { useLeague } from "../services/queries";
 
 type TeamSectionPropes = {
   teamId: string;
@@ -13,8 +12,7 @@ const TeamSection = ({
   teamName,
   selectedTeam,
 }: TeamSectionPropes) => {
-  const { leagueId } = useParams();
-  const { data: league, isLoading, error } = useSWR(`/league/${leagueId}`);
+  const { data: league, isLoading, error } = useLeague();
 
   if (error)
     return <div>{error.response.data.message || "Failed to load player."}</div>;
@@ -30,7 +28,7 @@ const TeamSection = ({
         {teamName}
       </p>
       <div className="flex flex-col justify-between gap-6 bg-green-400 px-6 py-8">
-        {[...Array(league.players_per_team)].map((_, index) => (
+        {[...Array(league?.players_per_team)].map((_, index) => (
           <InputField
             key={index}
             teamId={teamId}
