@@ -1,7 +1,7 @@
 import { Link } from "@/src/navigation";
 import { useTranslations } from "next-intl";
 import HeaderClient from "./HeaderClient";
-import { HeaderTextProps } from "../types/headerTextProps";
+import { HeaderTextProps } from "../../types/headerTextProps";
 import { SidebarButton } from "./SidebarButton";
 import LocaleSwitcher from "./LocalSwitcher";
 
@@ -26,7 +26,7 @@ export const Header = () => {
         >
           {t("logo")}
         </Link>
-        <div className="hidden md:flex">
+        <div className="hidden items-center justify-end md:flex">
           <Link
             href="/"
             className="px-4 py-2 font-bold transition-colors hover:text-gray-300"

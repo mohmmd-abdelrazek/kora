@@ -2,6 +2,8 @@ import * as dotenv from "dotenv";
 dotenv.config();
 import express, { Request, Response } from "express";
 import cors from "cors"; 
+import rateLimit from "express-rate-limit";
+
 
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
@@ -25,10 +27,18 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
 app.use(sessionMiddleware);
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+});
+
+app.use(limiter);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);

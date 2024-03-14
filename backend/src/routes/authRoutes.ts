@@ -1,7 +1,7 @@
 import express from "express";
 import passport from "passport";
 import * as authController from "../controllers/authController";
-import { validateSignup } from "../middleware/middleware";
+import { validateEmail, validateSignup } from "../middleware/middleware";
 
 const router = express.Router();
 
@@ -38,8 +38,12 @@ router.get("/logout", authController.logout);
 
 router.get("/status", authController.status);
 
+router.post("/send-verification-code",validateEmail, authController.sendVerificationCode);
+
+router.post("/verify-code", authController.verifyCode);
+
 // router.get(
-  //   "/google",
+//   "/google",
 //   passport.authenticate("google", { scope: ["profile", "email"] })
 // );
 
@@ -48,6 +52,5 @@ router.get("/status", authController.status);
 //   passport.authenticate("google", { failureRedirect: "/login" }),
 //   authController.googleCallback
 // );
-
 
 export default router;

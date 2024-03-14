@@ -1,21 +1,11 @@
-"use client"
+"use client";
 import { useState } from "react";
 import Sidebar from "./Sidebar";
-import LoadingIndicator from "./LoadingIndicator";
-import { useAuth } from "../services/queries";
+import LoadingIndicator from "../LoadingIndicator";
 
 export const SidebarButton = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { data, isLoading, error } = useAuth();
-
-  if (isLoading) return <LoadingIndicator />;
-  if (error)
-    return (
-      <div className="text-center text-red-600">Failed to load user data.</div>
-    );
-
-  const isLoggedIn = data?.isAuthenticated;
-
+  
   return (
     <>
       <button
@@ -40,7 +30,6 @@ export const SidebarButton = () => {
       <Sidebar
         isOpen={isSidebarOpen}
         toggle={() => setIsSidebarOpen(false)}
-        isLoggedIn={isLoggedIn}
       />
     </>
   );
