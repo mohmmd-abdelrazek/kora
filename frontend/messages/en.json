@@ -1,5 +1,13 @@
 {
   "Index": {
+    "homeGreeting": "Welcome",
+    "createPage": "Create Page",
+    "myPages": "My Pages",
+    "join": "Join",
+    "league": "our league",
+    "startCreating": "Start creating your pages now.",
+    "signInToCreate": "Sign in to create your page",
+    "easyManage": "Create and manage your pages easily",
     "leagueName": "League Name",
     "numberOfTeams": "Number of Teams",
     "playersPerTeam": "Players per Team",
@@ -20,10 +28,7 @@
     "signIn": "Sign In",
     "signUp": "Sign Up",
     "logOut": "Log Out",
+    "close": "close",
     "logo": "Dawry"
-  },
-  "LocaleSwitcher": {
-    "label": "Change language",
-    "locale": "{locale, select, ar {AR} en {EN} other {Unknown}}"
   }
 }

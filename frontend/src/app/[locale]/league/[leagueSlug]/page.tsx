@@ -39,7 +39,7 @@ const League = () => {
     );
 
   return (
-    <div className="flex w-full">
+    <div className="flex w-full h-full">
       <div className="flex flex-1 flex-col items-center gap-20 bg-slate-700 shadow-md max-sm:hidden">
         <div className="flex items-center gap-6">
           <h2 className="my-5 flex items-center gap-2 text-white">

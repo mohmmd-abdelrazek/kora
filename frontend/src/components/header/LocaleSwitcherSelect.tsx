@@ -3,7 +3,8 @@
 import clsx from "clsx";
 import { useParams } from "next/navigation";
 import { ChangeEvent, ReactNode, useTransition } from "react";
-import { useRouter, usePathname } from "../../navigation";
+import { useRouter, usePathname } from "@/src/navigation";
+import { useLocale } from "next-intl";
 
 type Props = {
   children: ReactNode;
@@ -20,6 +21,7 @@ export default function LocaleSwitcherSelect({
   const [isPending, startTransition] = useTransition();
   const pathname = usePathname();
   const params = useParams();
+  const locale = useLocale();
 
   function onSelectChange(event: ChangeEvent<HTMLSelectElement>) {
     const nextLocale = event.target.value;
@@ -37,20 +39,27 @@ export default function LocaleSwitcherSelect({
   return (
     <label
       className={clsx(
-        "relative text-gray-400",
+        "relative text-gray-200",
         isPending && "transition-opacity [&:disabled]:opacity-30",
       )}
     >
       <p className="sr-only">{label}</p>
       <select
-        className="inline-flex appearance-none bg-transparent py-3 pl-2 pr-6"
+        className="block w-full cursor-pointer appearance-none rounded-md bg-transparent pl-6 pr-2 py-2 placeholder-gray-500 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
         defaultValue={defaultValue}
         disabled={isPending}
         onChange={onSelectChange}
       >
         {children}
       </select>
-      <span className="pointer-events-none absolute right-2 top-[8px]">⌄</span>
+      <span
+        className={clsx(
+          "pointer-events-none absolute top-[8px]",
+          locale === "en" ? "right-2" : "left-2",
+        )}
+      >
+        ⌄
+      </span>
     </label>
   );
 }

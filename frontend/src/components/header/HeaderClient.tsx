@@ -3,7 +3,7 @@ import { Link } from "@/src/navigation";
 import { useAuth } from "../../services/queries";
 import LoadingIndicator from "../LoadingIndicator";
 import { axiosInstance } from "../../services/fetcher";
-import { HeaderTextProps } from "../../types/headerTextProps";
+import { HeaderTextProps } from "../../types/textProps";
 
 const Header = (texts: HeaderTextProps) => {
   const { data, isLoading, error } = useAuth();

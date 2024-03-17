@@ -1,13 +1,14 @@
 import { Link } from "@/src/navigation";
 import admin from "@/public/icons/admin.png";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { useParams } from "next/navigation";
+
 const MatchesTableButton = () => {
-  const pathname = usePathname();
+  const {leagueSlug} = useParams();
   return (
     <Link
       className="text-md flex w-fit gap-3 rounded-lg bg-blue-700 px-4 py-2 text-white hover:bg-accent hover:text-text"
-      href={`${pathname}/schedule`}
+      href={`/league/${leagueSlug}/schedule`}
     >
       <span className="max-sm:hidden">جدول المباريات</span>
       <Image className="w-auto" src={admin} alt="admin" height={15} />

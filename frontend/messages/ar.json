@@ -1,5 +1,13 @@
 {
   "Index": {
+    "homeGreeting": "أهلا",
+    "createPage": "أنشئ صفحة",
+    "myPages": "دورياتي",
+    "join": "انضم",
+    "league": "لدوري", 
+    "startCreating": "ابدأ بإنشاء صفحاتك الآن.",
+    "signInToCreate": "قم بتسجيل الدخول لإنشاء صفحتك",
+    "easyManage": "قم بإنشاء وإدارة صفحاتك بسهولة",
     "leagueName": "اسم الدوري",
     "numberOfTeams": "عدد الفرق",
     "playersPerTeam": "عدد اللاعبين في الفريق",
@@ -20,11 +28,8 @@
     "signIn": "تسجيل دخول",
     "signUp": "مستخدم جديد",
     "logOut": "تسجيل الخروج",
+    "close": "إغلاق",
     "logo": "دوري"
-  },
-  "LocaleSwitcher": {
-    "label": "Change language",
-    "locale": "{locale, select, ar {العربية} en {الانجليزية} other {Unknown}}"
   }
 }
   

@@ -1,49 +1,24 @@
-"use client";
-import { Link } from "@/src/navigation";
-import { useAuth } from "@/src/services/queries";
+import { useTranslations } from "next-intl";
+import { HomeTextProps } from "@/src/types/textProps";
+import HomeClient from "@/src/components/home/HomeClient";
 
 const LandingPage = () => {
-  const { data, isLoading, error } = useAuth();
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Failed to load</div>;
-
+  const t = useTranslations("Index");
+  
+  const texts: HomeTextProps = {
+    homeGreeting: t("homeGreeting"),
+    createPage: t("createPage"),
+    myPages: t("myPages"),
+    join: t("join"),
+    league: t("league"),
+    startCreating: t("startCreating"),
+    signInToCreate: t("signInToCreate"),
+    easyManage: t("easyManage"),
+  };
+  
   return (
-    <div className="w-full py-2">
-      <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
-        {data?.isAuthenticated ? (
-          <div>
-            <h1 className="mb-4 text-4xl">مرحبا, {data.user.name}!</h1>
-            <div className="flex items-center justify-center gap-4">
-              <Link
-                href="/create"
-                className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
-              >
-                أنشئ صفحة
-              </Link>
-              <Link
-                href="/my-pages"
-                className="rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-700"
-              >
-                دورياتي
-              </Link>
-            </div>
-          </div>
-        ) : (
-          <h1 className="text-6xl font-bold">
-            انضم <a className="text-blue-600">لدوري</a>
-          </h1>
-        )}
-
-        <p className="mt-3 text-2xl">
-          {data?.isAuthenticated
-            ? "ابدأ بإنشاء صفحاتك الآن."
-            : "قم بتسجيل الدخول لإنشاء صفحتك"}
-        </p>
-        <p className="mt-2 text-lg text-gray-600">
-          قم بإنشاء وإدارة صفحاتك بسهولة
-        </p>
-      </main>
+    <div className="w-full pb-32">
+      <HomeClient  {...texts}/>
     </div>
   );
 };

@@ -17,10 +17,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
-      <body className="flex flex-col">
+      <body className="flex min-h-screen flex-col">
         <Providers>
           <Header />
-          <div className="flex flex-1">{children}</div>
+          {children}
         </Providers>
       </body>
     </html>
