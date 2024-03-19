@@ -2,18 +2,19 @@
 
 import { useSchedule } from "@/src/services/queries";
 import LeagueButton from "@/src/components/LeagueButton";
+import LoadingIndicator from "@/src/components/LoadingIndicator";
 
 const SchedulePage = () => {
   const { data: schedule, isLoading, error } = useSchedule(); // Update the URL to your API endpoint
   
   console.log(schedule)
   // const schedule = scheduleData?.schedule;
-  if (isLoading) return <div className="py-10 text-center">Loading...</div>;
+  if (isLoading) return <LoadingIndicator />;
   if (error)
-  return <div>{error.response?.data.message || "Failed to load teams."}</div>;
+  return <div className="flex-1">{error.response?.data.message || "Failed to load teams."}</div>;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
+    <div className="responsive-container py-8">
       <h1 className="mb-8 text-center text-2xl font-bold">League Schedule</h1>
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">

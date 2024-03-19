@@ -1,6 +1,3 @@
-"use client";
-import Sidebar from "./Sidebar";
-
 export const SidebarButton = ({ onClick }: { onClick: () => void }) => {
   return (
     <button

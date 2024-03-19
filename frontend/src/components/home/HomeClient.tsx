@@ -6,21 +6,16 @@ import { HomeTextProps } from "@/src/types/textProps";
 
 const HomeClient = (texts: HomeTextProps) => {
   const { data, isLoading, error } = useAuth();
-  if (isLoading)
-    return (
-      <div className="flex h-full w-full items-center justify-center">
-        <LoadingIndicator />
-      </div>
-    );
+  if (isLoading) return <LoadingIndicator />;
   if (error) return <div>Failed to load</div>;
 
   return (
-    <main className="flex h-full w-full flex-1 flex-col items-center justify-center text-center">
+    <main className="flex h-full w-full flex-1 flex-col gap-3 items-center justify-center text-center">
       {data?.isAuthenticated ? (
-        <div>
-          <h1 className="mb-4 text-4xl">
-            {texts.homeGreeting}, {data.user.name}!
-          </h1>
+          <>
+          <h2 className="mb-4 text-4xl">
+            {texts.homeGreeting} {data.user.name}
+          </h2>
           <div className="flex items-center justify-center gap-4">
             <Link
               href="/create"
@@ -35,10 +30,10 @@ const HomeClient = (texts: HomeTextProps) => {
               {texts.myPages}
             </Link>
           </div>
-        </div>
+          </>
       ) : (
         <h1 className="text-6xl font-bold">
-          {texts.join} <a className="text-blue-600">{texts.league}</a>
+          {texts.join} <span className="text-blue-600">{texts.league}</span>
         </h1>
       )}
 
@@ -47,7 +42,7 @@ const HomeClient = (texts: HomeTextProps) => {
           ? `${texts.startCreating}`
           : `${texts.signInToCreate}`}
       </p>
-      <p className="mt-2 text-lg text-gray-600">{texts.easyManage}</p>
+      <p className="text-lg text-gray-600">{texts.easyManage}</p>
     </main>
   );
 };

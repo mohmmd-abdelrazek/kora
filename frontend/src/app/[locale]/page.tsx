@@ -17,7 +17,7 @@ const LandingPage = () => {
   };
   
   return (
-    <div className="w-full pb-32">
+    <div className="w-full flex-1 flex justify-center items-center responsive-container">
       <HomeClient  {...texts}/>
     </div>
   );

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/src/navigation';
 import { useAuth } from '../services/queries';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 const withAuth = (WrappedComponent: React.ComponentType<any>) => {
   const Auth: React.FC = (props) => {
@@ -16,11 +17,11 @@ const withAuth = (WrappedComponent: React.ComponentType<any>) => {
     }, [data?.isAuthenticated, isLoading, router]);
 
     if (isLoading) {
-      return <div>Loading...</div>; // Or your custom loading indicator
+      return <LoadingIndicator />;
     }
 
     if (!data?.isAuthenticated) {
-      return null; // Prevent flash of content
+      return null; 
     }
 
     return <WrappedComponent {...props} />;

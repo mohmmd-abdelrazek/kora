@@ -31,19 +31,19 @@ const Header = (texts: HeaderTextProps) => {
         <>
           <Link
             href="/create"
-            className="px-4 py-2 font-bold transition-colors hover:text-gray-300"
+            className="px-2 py-1 font-bold transition-colors hover:text-gray-300"
           >
             {texts.create}
           </Link>
           <Link
             href="/my-pages"
-            className="px-4 py-2 font-bold transition-colors hover:text-gray-300"
+            className="px-2 py-1 font-bold transition-colors hover:text-gray-300"
           >
             {texts.myLeagues}
           </Link>
           <button
             onClick={handleLogout}
-            className="focus:shadow-outline rounded bg-red-500 px-4 py-2 font-bold text-white transition-colors hover:bg-red-700 focus:outline-none"
+            className="focus:shadow-outline rounded bg-red-500 px-2 py-1 font-bold text-white transition-colors hover:bg-red-700 focus:outline-none"
           >
             {texts.logOut}
           </button>
@@ -52,13 +52,13 @@ const Header = (texts: HeaderTextProps) => {
         <>
           <Link
             href="/signin"
-            className="px-4 py-2 font-bold transition-colors hover:text-gray-300"
+            className="px-2 py-1 font-bold transition-colors hover:text-gray-300"
           >
             {texts.signIn}
           </Link>
           <Link
             href="/signup"
-            className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white transition-colors hover:bg-blue-700 focus:outline-none"
+            className="focus:shadow-outline rounded bg-blue-500 px-2 py-1 font-bold text-white transition-colors hover:bg-blue-700 focus:outline-none"
           >
             {texts.signUp}
           </Link>

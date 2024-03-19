@@ -2,38 +2,24 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { axiosInstance } from "@/src/services/fetcher";
-import EditTeamsModal from "@/src/components/TeamsNamesModal";
 import withAuth from "@/src/utils/withAuth";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { LeagueFormData } from "@/src/types/createLeague";
 
-interface LeagueFormData {
-  leagueName: string;
-  numberOfTeams: number;
-  playersPerTeam: number;
-  dateString: Date | null;
-  startTime: string;
-  matchDuration: number;
-  breakDuration: number;
-  totalPlayTime: number;
-  numberOfPlaygrounds: number;
-  teamNames: string[];
-}
-
-const CreateLeaguePage: React.FC = () => {
+const CreateLeaguePage = () => {
   const [formData, setFormData] = useState<LeagueFormData>({
     leagueName: "",
-    numberOfTeams: 0,
-    playersPerTeam: 0,
+    numberOfTeams: 3,
+    playersPerTeam: 5,
     dateString: new Date(),
     startTime: "",
-    matchDuration: 0,
-    breakDuration: 0,
-    totalPlayTime: 1,
+    matchDuration: 10,
+    breakDuration: 5,
+    totalPlayTime: 120,
     numberOfPlaygrounds: 1,
     teamNames: [],
   });
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [weekday, setWeekday] = useState("");
 
   const router = useRouter();
@@ -55,7 +41,7 @@ const CreateLeaguePage: React.FC = () => {
           .map((_, index) => formData.teamNames[index] || `فريق ${index + 1}`);
         setFormData((prev) => ({ ...prev, teamNames: newTeamNames }));
       }
-    } 
+    }
     setFormData((prev) => ({ ...prev, [name]: updatedValue }));
   };
 
@@ -78,7 +64,9 @@ const CreateLeaguePage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const dateToSend = formData.dateString ? formData.dateString.toISOString() : null;
+    const dateToSend = formData.dateString
+      ? formData.dateString.toISOString()
+      : null;
     const payload = {
       ...formData,
       dateString: dateToSend,
@@ -92,180 +80,133 @@ const CreateLeaguePage: React.FC = () => {
     }
   };
 
+  const inputFields = [
+    {
+      id: "leagueName",
+      name: "leagueName",
+      type: "text",
+      label: "اسم الدوري",
+      value: formData.leagueName,
+    },
+    {
+      id: "numberOfTeams",
+      name: "numberOfTeams",
+      type: "number",
+      label: "عدد الفرق",
+      value: formData.numberOfTeams,
+    },
+    {
+      id: "playersPerTeam",
+      name: "playersPerTeam",
+      type: "number",
+      label: "عدد اللاعبين في الفريق",
+      value: formData.playersPerTeam,
+    },
+    {
+      id: "matchDuration",
+      name: "matchDuration",
+      type: "number",
+      label: "مدة المباراة (بالدقائق)",
+      value: formData.matchDuration,
+    },
+    {
+      id: "breakDuration",
+      name: "breakDuration",
+      type: "number",
+      label: "مدة الراحة (بالدقائق)",
+      value: formData.breakDuration,
+    },
+    {
+      id: "totalPlayTime",
+      name: "totalPlayTime",
+      type: "number",
+      label: "الوقت الكلي للعب (بالدقائق)",
+      value: formData.totalPlayTime,
+    },
+    {
+      id: "numberOfPlaygrounds",
+      name: "numberOfPlaygrounds",
+      type: "number",
+      label: "عدد الملاعب المتاحة",
+      value: formData.numberOfPlaygrounds,
+    },
+  ];
+
   return (
-    <div className="mx-auto my-10 max-w-xl">
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label
-            htmlFor="leagueName"
-            className="block text-sm font-medium text-gray-700"
-          >
-            اسم الدوري
-          </label>
-          <input
-            type="text"
-            name="leagueName"
-            required
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 leading-tight shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
-            onChange={handleChange}
-          />
+    <div className="flex min-h-screen items-center justify-center bg-gray-100 p-6">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-4xl space-y-6 rounded-2xl bg-white p-10 shadow-2xl"
+      >
+        <h2 className="text-center text-4xl font-extrabold text-indigo-600">
+          تسجيل دوري جديد
+        </h2>
+
+        <div className="dynamic-grid">
+          {inputFields.map((input) => (
+            <div key={input.id} className="flex flex-col">
+              <label
+                htmlFor={input.id}
+                className="mb-1 text-lg font-semibold text-gray-800"
+              >
+                {input.label}
+              </label>
+              <input
+                id={input.id}
+                name={input.name}
+                type={input.type}
+                value={input.value}
+                onChange={handleChange}
+                required
+                min="1"
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 leading-tight shadow-sm focus:border-indigo-500 focus:outline-none focus:ring focus:ring-indigo-500"
+              />
+            </div>
+          ))}
         </div>
-        <div>
-          <label
-            htmlFor="numberOfTeams"
-            className="block text-sm font-medium text-gray-700"
-          >
-            عدد الفرق
-          </label>
-          <input
-            type="number"
-            name="numberOfTeams"
-            required
-            min="1"
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 leading-tight shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
-            onChange={handleChange}
-          />
-          <>
-            <button
-              type="button"
-              onClick={() => setIsModalOpen(true)}
-              className="mt-4 rounded-md border border-transparent bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600"
+
+        <div className="dynamic-grid">
+          <div className="flex flex-col">
+            <label
+              htmlFor="date"
+              className="text-lg font-semibold text-gray-800"
             >
-              عدل أسماء الفرق
-            </button>
-            <EditTeamsModal
-              isOpen={isModalOpen}
-              numberOfTeams={formData.numberOfTeams}
-              initialTeamNames={formData.teamNames}
-              onSave={(teamNames) => {
-                setFormData((prev) => ({ ...prev, teamNames }));
-                setIsModalOpen(false);
-              }}
-              onClose={() => setIsModalOpen(false)}
+              تاريخ البداية
+            </label>
+            <DatePicker
+              id="date"
+              selected={formData.dateString}
+              onChange={handleDateChange}
+              dateFormat="dd/MM/yyyy"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 leading-tight shadow-sm focus:border-indigo-500 focus:outline-none focus:ring focus:ring-indigo-500"
             />
-          </>
+            <span className="text-sm font-semibold text-gray-600">{weekday}</span>
+          </div>
+
+          <div>
+            <label
+              htmlFor="startTime"
+              className="block text-lg font-medium text-gray-700"
+            >
+              وقت البداية
+            </label>
+            <input
+              type="time"
+              id="startTime"
+              name="startTime"
+              required
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 leading-tight shadow-sm focus:border-indigo-500 focus:outline-none focus:ring focus:ring-indigo-500"
+              onChange={handleChange}
+            />
+          </div>
         </div>
-        <div>
-          <label
-            htmlFor="playersPerTeam"
-            className="block text-sm font-medium text-gray-700"
-          >
-            عدد اللاعبين في الفريق
-          </label>
-          <input
-            type="number"
-            name="playersPerTeam"
-            required
-            min="1"
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 leading-tight shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="date"
-            className="block text-sm font-medium text-gray-700"
-          >
-            تاريخ البداية
-          </label>
-          <DatePicker
-            id="date"
-            selected={formData.dateString}
-            onChange={handleDateChange}
-            dateFormat="dd/MM/yyyy"
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 leading-tight shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
-          />
-          <span>{weekday}</span>
-        </div>
-        <div>
-          <label
-            htmlFor="startTime"
-            className="block text-sm font-medium text-gray-700"
-          >
-            وقت البداية
-          </label>
-          <input
-            type="time"
-            name="startTime"
-            required
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 leading-tight shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="matchDuration"
-            className="block text-sm font-medium text-gray-700"
-          >
-            مدة المباراة (بالدقائق)
-          </label>
-          <input
-            type="number"
-            name="matchDuration"
-            required
-            min="1"
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 leading-tight shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="breakDuration"
-            className="block text-sm font-medium text-gray-700"
-          >
-            مدة الراحة (بالدقائق)
-          </label>
-          <input
-            type="number"
-            id="breakDuration"
-            name="breakDuration"
-            required
-            min="1"
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 leading-tight shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
-            value={formData.breakDuration}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="totalPlayTime"
-            className="block text-sm font-medium text-gray-700"
-          >
-            الوقت الكلي للعب (بالدقائق)
-          </label>
-          <input
-            type="number"
-            name="totalPlayTime"
-            required
-            min="1"
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 leading-tight shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="numberOfPlaygrounds"
-            className="block text-sm font-medium text-gray-700"
-          >
-            عدد الملاعب المتاحة
-          </label>
-          <input
-            type="number"
-            name="numberOfPlaygrounds"
-            required
-            min="1"
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 leading-tight shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <button
-            type="submit"
-            className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          >
-            تسجيل
-          </button>
-        </div>
+
+        <button
+          type="submit"
+          className="mt-6 inline-flex w-full justify-center rounded-lg bg-indigo-600 px-6 py-4 text-xl font-bold text-white shadow-md transition duration-200 ease-in-out hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50"
+        >
+          تسجيل
+        </button>
       </form>
     </div>
   );
