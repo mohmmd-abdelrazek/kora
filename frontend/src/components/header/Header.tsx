@@ -19,24 +19,24 @@ export const Header = () => {
   };
 
   return (
-    <header className="flex md:sticky md:top-0 md:z-10 items-center justify-between bg-gray-800 responsive-container py-2 text-white shadow-md">
+    <header className="responsive-container flex items-center justify-between bg-gray-800 py-2 text-white shadow-md md:sticky md:top-0 md:z-10">
       <Link
         href="/"
-        className="text-lg px-2 py-1 font-bold transition-colors hover:text-gray-300"
+        className="text-md px-2 py-1 font-bold transition-colors hover:text-gray-300"
       >
         {t("logo")}
       </Link>
-      <div className="hidden items-center gap-3 md:flex">
+      <div className="text-md font-bold hidden items-center gap-6 md:flex">
         <Link
           href="/"
-          className="px-2 py-1 font-bold transition-colors hover:text-gray-300"
+          className="transition-colors hover:text-gray-300"
         >
           {t("home")}
         </Link>
         <HeaderClient {...texts} />
         <LocaleSwitcher />
       </div>
-      <Sidebar {... texts} />
+      <Sidebar {...texts} />
     </header>
   );
 };

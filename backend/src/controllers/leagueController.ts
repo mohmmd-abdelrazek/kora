@@ -102,7 +102,7 @@ export const getLeagues = async (req: Request, res: Response) => {
       res.json(rows);
     } else {
       res.status(404).json({
-        message: "Leagues not found or you do not have permission to view it.",
+        message: "No leagues found. You have not created any leagues yet.",
       });
     }
   } catch (error) {

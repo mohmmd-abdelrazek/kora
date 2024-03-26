@@ -5,6 +5,24 @@ export const submitPlayer = async (req: Request, res: Response) => {
   const { teamId, playerIndex, name, position } = req.body;
 
   try {
+    const currentResult = await pool.query(
+      "SELECT * FROM players WHERE team_id = $1 AND player_index = $2",
+      [teamId, playerIndex]
+    );
+    const currentPlayer = currentResult.rows;
+
+    if (
+      currentResult.rows.length > 0 &&
+      (currentPlayer[0].name !== name || currentPlayer[0].position !== position)
+    ) {
+      return res
+        .status(409)
+        .json({
+          message:
+            "This slot has already been taken. Please try a different one.",
+        });
+    }
+
     const result = await pool.query(
       "INSERT INTO players (team_id, player_index, name, position) VALUES ($1, $2, $3, $4) RETURNING *",
       [teamId, playerIndex, name, position]
@@ -57,13 +75,13 @@ export const updatePlayer = async (req: Request, res: Response) => {
     const { rows } = await pool.query(query, values);
 
     if (rows.length > 0) {
-      res.json({ player: rows[0], message: 'Player updated successfully' });
+      res.json({ player: rows[0], message: "Player updated successfully" });
     } else {
-      res.status(404).json({ message: 'Player not found' });
+      res.status(404).json({ message: "Player not found" });
     }
   } catch (error) {
-    console.error('Error updating player:', error);
-    res.status(500).json({ message: 'Error updating player information' });
+    console.error("Error updating player:", error);
+    res.status(500).json({ message: "Error updating player information" });
   }
 };
 
@@ -71,16 +89,22 @@ export const deletePlayer = async (req: Request, res: Response) => {
   const { teamId, playerIndex } = req.params;
 
   try {
-    const deleteQuery = 'DELETE FROM players WHERE team_id = $1 AND player_index = $2 RETURNING *;';
+    const deleteQuery =
+      "DELETE FROM players WHERE team_id = $1 AND player_index = $2 RETURNING *;";
     const { rows } = await pool.query(deleteQuery, [teamId, playerIndex]);
 
     if (rows.length > 0) {
-      res.status(200).json({ message: 'Player deleted successfully', deletedPlayer: rows[0] });
+      res
+        .status(200)
+        .json({
+          message: "Player deleted successfully",
+          deletedPlayer: rows[0],
+        });
     } else {
-      res.status(404).json({ message: 'Player not found' });
+      res.status(404).json({ message: "Player not found" });
     }
   } catch (error) {
-    console.error('Error deleting player:', error);
-    res.status(500).json({ message: 'Failed to delete player' });
+    console.error("Error deleting player:", error);
+    res.status(500).json({ message: "Failed to delete player" });
   }
 };

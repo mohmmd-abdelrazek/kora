@@ -1,21 +1,29 @@
 "use client";
 import { useEffect, useState } from "react";
+import { axiosInstance } from "../../services/fetcher";
+import { useIsOwner } from "../../hooks/useIsOwner";
+import { isAxiosError } from "axios";
+import { useLocale } from "next-intl";
+import { playerNameProps } from "@/src/types/player";
 import useSWR from "swr";
-import { axiosInstance } from "../services/fetcher";
-import { useIsOwner } from "../hooks/useIsOwner";
-import LoadingIndicator from "./LoadingIndicator";
+import LoadingIndicator from "../LoadingIndicator";
+import clsx from "clsx";
+import { TbDotsVertical } from "react-icons/tb";
+import { LeagueTextProps } from "@/src/types/textProps";
 
-type playerNameProps = {
-  teamId: string;
-  playerIndex: string;
-};
+interface playerProps extends playerNameProps {
+  texts: LeagueTextProps;
+}
 
-const PlayerInput = ({ teamId, playerIndex }: playerNameProps) => {
+const PlayerInput = ({ teamId, playerIndex, texts }: playerProps) => {
   const [playerName, setPlayerName] = useState("");
   const [selectedPosition, setSelectedPosition] = useState("");
+  const [originalValues, setOriginalValues] = useState({ name: '', position: '' });
   const [isDisabled, setIsDisabled] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [showActions, setShowActions] = useState(false);
+  const locale = useLocale();
 
   const {
     data: player,
@@ -28,10 +36,12 @@ const PlayerInput = ({ teamId, playerIndex }: playerNameProps) => {
     if (player?.name && player?.position) {
       setPlayerName(player.name);
       setSelectedPosition(player.position);
+      setOriginalValues({ name: player.name, position: player.position });
       setIsDisabled(true);
     } else {
       setPlayerName("");
       setSelectedPosition("");
+      setOriginalValues({ name: "", position: "" });
       setIsDisabled(false);
     }
   }, [player?.name, player?.position]);
@@ -44,7 +54,12 @@ const PlayerInput = ({ teamId, playerIndex }: playerNameProps) => {
     );
   if (error) return <div>Error fetching data</div>;
 
-  const positions = ["حارس مرمى", "مدافع", "وسط", "مهاجم"];
+  const positions = [
+    texts.goalkeeper,
+    texts.defender,
+    texts.midfielder,
+    texts.forward,
+  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,22 +70,21 @@ const PlayerInput = ({ teamId, playerIndex }: playerNameProps) => {
         teamId,
         playerIndex,
         name: playerName,
-        position: selectedPosition, // Submit the selected position along with other data
+        position: selectedPosition,
       });
 
       if (response) {
         setIsDisabled(true);
+        setOriginalValues({name: playerName, position: selectedPosition})
       }
     } catch (error) {
-      console.error("Error submitting data:", error);
+      if (isAxiosError(error) && error.response?.status === 409) {
+        alert(error.response.data.message);
+        console.error("Error submitting data:", error);
+      }
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleEdit = () => {
-    setIsEditMode(true);
-    setIsDisabled(false); // Enable input for editing
   };
 
   const handleSubmitEdit = async (e: React.FormEvent) => {
@@ -85,9 +99,8 @@ const PlayerInput = ({ teamId, playerIndex }: playerNameProps) => {
           position: selectedPosition,
         },
       );
-      setIsEditMode(false); // Exit edit mode
+      setIsEditMode(false);
       setIsDisabled(true);
-      // Handle successful edit
       console.log("Edit successful", response.data);
     } catch (error) {
       console.error("Error editing data:", error);
@@ -97,8 +110,7 @@ const PlayerInput = ({ teamId, playerIndex }: playerNameProps) => {
   };
 
   const handleDelete = async (e: React.FormEvent) => {
-    // Confirm before deleting
-    if (!confirm("Are you sure you want to delete this player?")) return;
+    if (!confirm(texts.confirmDelete)) return;
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -107,10 +119,9 @@ const PlayerInput = ({ teamId, playerIndex }: playerNameProps) => {
         `/player/${teamId}/${playerIndex}`,
       );
       setPlayerName("");
-      setIsDisabled(false)
-      // Handle successful deletion
+      setSelectedPosition("");
+      setIsDisabled(false);
       console.log("Delete successful", response.data);
-      // Optionally reset state or inform parent component to remove the player from the list
     } catch (error) {
       console.error("Error deleting data:", error);
     } finally {
@@ -127,11 +138,11 @@ const PlayerInput = ({ teamId, playerIndex }: playerNameProps) => {
         value={selectedPosition}
         onChange={(e) => setSelectedPosition(e.target.value)}
         disabled={isDisabled || isSubmitting}
-        className="text-md h-full rounded-lg p-2 font-bold text-text focus:outline-accent disabled:bg-green-100"
+        className="h-full rounded-lg px-1 py-2 text-xs font-bold text-text focus:outline-accent disabled:bg-green-100"
       >
-        <option value="">اختر مركز</option>
+        <option value="">{texts.selectPosition}</option>
         {positions.map((position, index) => (
-          <option key={index} value={position}>
+          <option key={index} value={index}>
             {position}
           </option>
         ))}
@@ -141,59 +152,84 @@ const PlayerInput = ({ teamId, playerIndex }: playerNameProps) => {
         value={playerName}
         onChange={(e) => setPlayerName(e.target.value)}
         disabled={isDisabled || isSubmitting}
-        placeholder="اكتب اسمك..."
+        placeholder={texts.enterName}
         className="text-md h-full flex-1 rounded-lg p-2 font-bold text-text focus:outline-accent disabled:w-fit disabled:bg-green-100 max-sm:min-w-0"
       />
       <button
         type="submit"
         disabled={isDisabled || isEditMode || !selectedPosition || !playerName}
-        className={`w-30 text-md absolute left-1 items-center rounded-lg px-2 py-1 font-medium ${
+        className={clsx(
+          "absolute items-center rounded-lg px-2 py-1 text-sm font-medium disabled:hidden",
           isSubmitting
             ? "bg-slate-500 text-white"
-            : "bg-slate-800 text-white hover:bg-gradient-to-br"
-        } disabled:hidden`}
+            : "bg-slate-800 text-white hover:bg-gradient-to-br",
+          locale === "en" ? "right-1" : "left-1",
+        )}
       >
-        {isSubmitting ? ".....جاري التسجيل" : "سجل"}
+        {isSubmitting ? texts.registering : texts.register}
       </button>
-
       {isOwner && isDisabled && (
-        <div className="absolute left-0 flex gap-2">
+        <button
+          type="button"
+          onClick={() => setShowActions(!showActions)}
+          className={clsx(
+            "absolute flex items-center justify-center rounded-md bg-slate-50 text-gray-900",
+            locale === "ar" ? "-left-5" : "-right-5",
+          )}
+        >
+          <TbDotsVertical />
+        </button>
+      )}
+      {isOwner && isDisabled && showActions && (
+        <div
+          className={clsx(
+            "absolute flex gap-1 p-1",
+            locale === "ar" ? "left-0" : "right-0",
+          )}
+        >
           <button
             type="button"
-            onClick={handleEdit}
-            className="w-30 text-md items-center rounded-lg bg-slate-800 px-2 py-1 font-medium text-white hover:bg-gradient-to-br"
+            onClick={() => {
+              setIsEditMode(true);
+              setIsDisabled(false);
+            }}
+            className="items-center rounded-lg bg-slate-800 px-2 py-1 text-sm font-medium text-white hover:bg-gradient-to-br"
           >
-            تعديل
+            {texts.edit}
           </button>
           <button
             type="button"
             onClick={handleDelete}
-            className="w-30 text-md items-center rounded-lg bg-slate-800 px-2 py-1 font-medium text-white hover:bg-gradient-to-br"
+            className="items-center rounded-lg bg-slate-800 px-2 py-1 text-sm font-medium text-white hover:bg-gradient-to-br"
           >
-            حذف
+            {texts.delete}
           </button>
         </div>
       )}
       {isEditMode && (
-        <div className="absolute left-0 flex gap-2">
+        <div
+          className={clsx(
+            "absolute flex gap-1 p-1",
+            locale === "ar" ? "left-0" : "right-0",
+          )}
+        >
           <button
             type="submit"
-            className="w-30 text-md items-center rounded-lg bg-slate-800 px-2 py-1 font-medium text-white hover:bg-gradient-to-br"
+            className="items-center rounded-lg bg-slate-800 px-2 py-1 text-sm font-medium text-white hover:bg-gradient-to-br"
           >
-            تم
+            {texts.ok}
           </button>
           <button
-            type="button" // Make sure this is of type "button" to prevent form submission
+            type="button"
             onClick={() => {
-              setIsEditMode(false); // Exit edit mode
-              setIsDisabled(true); // Disable input
-              // Optionally reset the player name and position to their original values
-              setPlayerName(player?.name || "");
-              setSelectedPosition(player?.position || "");
+              setIsEditMode(false);
+              setIsDisabled(true);
+              setPlayerName(originalValues.name);
+              setSelectedPosition(originalValues.position);
             }}
-            className="w-30 text-md items-center rounded-lg bg-red-500 px-2 py-1 font-medium text-white hover:bg-red-700" // Adjust the positioning as needed
+            className="items-center rounded-lg bg-red-500 px-2 py-1 text-sm font-medium text-white hover:bg-red-700"
           >
-            إلغاء
+            {texts.cancel}
           </button>
         </div>
       )}

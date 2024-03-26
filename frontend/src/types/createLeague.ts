@@ -10,3 +10,11 @@ export interface LeagueFormData {
   numberOfPlaygrounds: number;
   teamNames: string[];
 }
+
+export interface EditTeamsProps {
+  isOpen: boolean;
+  numberOfTeams: number;
+  initialTeamNames: string[];
+  onSave: (teamNames: string[]) => void;
+  onClose: (originalTeamNames: string[]) => void;
+}

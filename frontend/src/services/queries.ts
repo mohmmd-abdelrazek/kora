@@ -35,6 +35,5 @@ export function useTeams() {
 export function useSchedule() {
   const { leagueSlug } = useParams();
   const leagueId = extractLeagueId(leagueSlug); 
-  console.log(leagueSlug);
   return useSWR(leagueId ? `/league/${leagueId}/schedule` : null);
 }

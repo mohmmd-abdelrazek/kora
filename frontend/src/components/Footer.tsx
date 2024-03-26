@@ -1,8 +1,11 @@
+import { useTranslations } from "next-intl";
+
 const Footer = () => {
+  const t = useTranslations("footer");
   return (
-    <footer className="flex h-12 items-center justify-between bg-black responsive-container text-white">
+    <footer className="flex py-2 resposive-container items-center justify-between bg-black responsive-container text-white">
       <div className="text-sm">
-        © {new Date().getFullYear()} Dawry. All rights reserved.
+      {t("copyright", { year: new Date().getFullYear() })}
       </div>
       {/* <nav>
         <ul className="flex space-x-4">

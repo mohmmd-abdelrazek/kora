@@ -1,104 +1,54 @@
-"use client";
-import { useEffect, useState } from "react";
-import Tab from "@/src/components/Tab";
-import Image from "next/image";
-import ball from "@/public/icons/football.png";
-import Pagination from "@/src/components/Pagination";
-import HomeButton from "@/src/components/HomeButton";
-import AdminButton from "@/src/components/MatchesTableButton";
-import { Team } from "@/src/types/team";
-import TeamSection from "@/src/components/TeamSection";
-import LoadingIndicator from "@/src/components/LoadingIndicator";
-import ShareButton from "@/src/components/ShareButton";
-import { useIsOwner } from "@/src/hooks/useIsOwner";
-import { useLeague, useTeams } from "@/src/services/queries";
+import TabSide from "@/src/components/league/TabSide";
+import Teams from "@/src/components/league/Teams";
+import MatchesTableButton from "@/src/components/league/MatchesTableButton";
+import { useTranslations } from "next-intl";
+import { LeagueTextProps } from "@/src/types/textProps";
 
 const League = () => {
-  const [selectedTeam, setSelectedTeam] = useState("");
-  const { data: teams, isLoading, error } = useTeams();
-  const {
-    data: league,
-    isLoading: leagueLoading,
-    error: leagueError,
-  } = useLeague();
-  const { isOwner, isLoading: ownerLoading, error: ownerError } = useIsOwner();
-
-  useEffect(() => {
-    if (teams && teams.length > 0 && !selectedTeam) {
-      setSelectedTeam(teams[0].team_id);
-    }
-  }, [teams, selectedTeam]);
-
-  if (error || ownerError || leagueError)
-    return (
-      <div className="flex-1">
-        {error?.response?.data.message || "Failed to load teams."}
-      </div>
-    );
-  if (isLoading || ownerLoading || leagueLoading) return <LoadingIndicator />;
-
+  const t = useTranslations("league");
+  const texts: LeagueTextProps = {
+    joinTeamNow: t("joinTeamNow"),
+    ifTeamsFull: t("ifTeamsFull"),
+    tryAgain: t("tryAgain"),
+    selectPosition: t("selectPosition"),
+    enterName: t("enterName"),
+    registering: t("registering"),
+    register: t("register"),
+    edit: t("edit"),
+    ok: t("ok"),
+    cancel: t("cancel"),
+    delete: t("delete"),
+    confirmDelete: t("confirmDelete"),
+    share: t("share"),
+    matchesSchedule: t("matchesSchedule"),
+    viewMatches: t("viewMatches"),
+    goalkeeper: t("goalkeeper"),
+    defender: t("defender"),
+    midfielder: t("midfielder"),
+    forward: t("forward"),
+  };
   return (
-    <div className="flex flex-1">
-      <div className="flex flex-1 flex-col items-center gap-20 bg-slate-700 shadow-md max-sm:hidden">
-        <div className="flex items-center gap-6">
-          <h2 className="my-5 flex items-center gap-2 text-white">
-            <Image src={ball} alt="ball" height={30}></Image>
-            {league?.name}
-          </h2>
-          {isOwner && (
-            <div className="p-4">
-              <ShareButton />
-            </div>
-          )}
-        </div>
-        <ul className="flex w-full flex-col items-center justify-center gap-6 rounded-xl px-4 py-3 text-sm font-medium text-text dark:text-gray-400">
-          {teams.map((team: Team) => (
-            <Tab
-              key={team.team_id}
-              teamId={team.team_id}
-              selectedTeam={selectedTeam}
-              handleClick={() => setSelectedTeam(team.team_id)}
-              teamName={team.name}
-            />
-          ))}
-          ;
-        </ul>
+    <div className="flex flex-1 max-sm:flex-col">
+      <div className="flex w-full flex-col gap-8 bg-slate-700 shadow-md max-sm:gap-3 sm:w-2/6 sm:items-center">
+        <TabSide {...texts} />
       </div>
-      <div className="flex h-full w-4/6 flex-col gap-6 bg-slate-100 max-sm:w-full max-sm:gap-2">
-        <div className="px-16 pt-5 text-right max-sm:hidden max-sm:py-10 sm:px-[5%] md:px-[8%] lg:pr-[30%]">
-          <h2 className="mb-5 text-right text-slate-700">انضم إلى فريق الآن</h2>
-          <p className="font-bold text-slate-500">
-            اذا كانت جميع الفرق ممتلئة فلا يمكنك الاشتراك <br />
-            يمكنك المحاولة في مرة قادمة
-          </p>
-        </div>
-        <div className="flex gap-6 overflow-x-scroll p-2 px-4 max-sm:py-4 sm:hidden sm:px-[5%] md:px-[8%] lg:pr-[30%]">
-          {teams.map((team: Team) => (
-            <Pagination
-              key={team.team_id}
-              teamId={team.team_id}
-              selectedTeam={selectedTeam}
-              handleClick={() => setSelectedTeam(team.team_id)}
-              teamName={team.name}
-            />
-          ))}
-        </div>
-        <div className="px-4 max-sm:py-4 sm:px-[5%] md:px-[8%] lg:pr-[30%]">
-          {teams.map((team: Team) => (
-            <TeamSection
-              key={team.team_id}
-              teamId={team.team_id}
-              selectedTeam={selectedTeam}
-              teamName={team.name}
-            />
-          ))}
-        </div>
-
-        <div className="flex w-full items-center justify-center gap-6 bg-white p-8 max-sm:p-4">
-          <HomeButton />
-          <AdminButton />
+      <div className="flex sm:flex-col flex-1 items-center bg-slate-100">
+        <div className="flex max-sm:w-full flex-col px-2 gap-8 py-4">
+          <div className="max-sm:hidden">
+            <h2 className="mb-5 text-slate-700">
+              {texts.joinTeamNow}
+            </h2>
+            <p className="font-bold text-slate-500">
+              {texts.ifTeamsFull} <br />
+              {texts.tryAgain}
+            </p>
+          </div>
+          <div className="flex flex-1 flex-col">
+            <Teams {...texts} />
+          </div>
         </div>
       </div>
+      <MatchesTableButton {...texts} />
     </div>
   );
 };

@@ -11,6 +11,8 @@ const LandingPage = () => {
     myPages: t("myPages"),
     join: t("join"),
     league: t("league"),
+    signIn: t("signIn"),
+    signUp: t("signUp"),
     startCreating: t("startCreating"),
     signInToCreate: t("signInToCreate"),
     easyManage: t("easyManage"),

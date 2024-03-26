@@ -15,7 +15,7 @@
   .dynamic-grid {
     display: grid;
     grid-gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
 
 .responsive-container {
@@ -42,6 +42,47 @@
     padding-left: 8rem;
     padding-right: 8rem;
   }
+}
+
+/* For WebKit browsers */
+.team-list::-webkit-scrollbar {
+  width: 0; /* Hide scrollbar by default */
+  background: transparent; /* Optional: Just to ensure scrollbar is fully transparent */
+}
+
+.team-list:hover::-webkit-scrollbar {
+  width: 8px; /* Show scrollbar on hover */
+}
+
+.team-list::-webkit-scrollbar-track {
+  background: transparent; /* Track background */
+}
+
+.team-list:hover::-webkit-scrollbar-track {
+  background: #2a2a2a; /* Track background on hover */
+}
+
+.team-list::-webkit-scrollbar-thumb {
+  background: transparent; /* Scrollbar color */
+}
+
+.team-list:hover::-webkit-scrollbar-thumb {
+  background: #4a4a4a; /* Scrollbar color on hover */
+  border-radius: 4px; /* Rounded corners for scrollbar */
+}
+
+.team-list:hover::-webkit-scrollbar-thumb:hover {
+  background: #5a5a5a; /* Scrollbar color when hovering over the scrollbar itself */
+}
+
+/* For Firefox */
+.team-list {
+  scrollbar-width: none; /* Hide scrollbar by default */
+}
+
+.team-list:hover {
+  scrollbar-width: thin; /* 'auto' or 'thin' */
+  scrollbar-color: #4a4a4a #2a2a2a; /* Thumb and track color on hover */
 }
 
 }

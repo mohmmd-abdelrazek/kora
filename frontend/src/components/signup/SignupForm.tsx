@@ -5,8 +5,9 @@ import { useState } from "react";
 import { useRouter } from "@/src/navigation";
 import { axiosInstance } from "@/src/services/fetcher";
 import { isAxiosError } from "axios";
+import { SignupTextProps } from "@/src/types/textProps";
 
-const SignupForm = () => {
+const SignupForm = (texts: SignupTextProps) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -17,6 +18,7 @@ const SignupForm = () => {
   const [code, setCode] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [isSignupEnabled, setIsSignupEnabled] = useState(false);
   const router = useRouter();
 
@@ -39,9 +41,7 @@ const SignupForm = () => {
       let email = formData.email;
       await axiosInstance.post("/auth/verify-code", { email, code });
       setIsSignupEnabled(true);
-      setSuccessMessage(
-        "Email verified successfully. You can now complete the signup.",
-      );
+      setSuccessMessage("Code verified successfully!");
     } catch (error) {
       console.error("Error verifying code:", error);
       setErrors(["Failed to verify code."]);
@@ -53,6 +53,11 @@ const SignupForm = () => {
   const validatePassword = (password: string): boolean =>
     /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
 
+  const validatePasswordMatch = (
+    password: string,
+    passwordConfirm: string,
+  ): boolean => formData.password === formData.passwordConfirm;
+
   const validateForm = (): boolean => {
     const newErrors: string[] = [];
     if (!validateEmail(formData.email)) {
@@ -62,6 +67,9 @@ const SignupForm = () => {
       newErrors.push(
         "Password must be at least 8 characters long and include both letters and numbers",
       );
+    }
+    if (!validatePasswordMatch(formData.password, formData.passwordConfirm)) {
+      newErrors.push("Password confirmation not match password");
     }
 
     setErrors(newErrors);
@@ -77,34 +85,37 @@ const SignupForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateForm()) return;
-
+    setIsLoading(true);
     try {
       const response = await axiosInstance.post("/auth/signup", formData);
       const logout = await axiosInstance.get("/auth/logout");
-      setSuccessMessage("Signup successful! Redirecting...");
+      setIsLoading(false);
+      setSuccessMessage("Signup successful!");
       setErrors([]);
       setTimeout(() => {
-        router.push("/signin");
-      }, 1500);
+        confirm(
+          "Congratulations! you have signed up successfully, let's signin?",
+        ) && router.push("/signin");
+      }, 1000);
     } catch (error) {
+      setIsLoading(false);
       if (isAxiosError(error)) {
-        setErrors([
-          error.response?.data?.error || "An unknown error occurred.",
-        ]);
+        setErrors([error.response?.data?.error || texts.errorMessage]);
       }
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-lg space-y-6 bg-white">
-      <div className="space-y-4">
+    <form onSubmit={handleSubmit} className="max-w-md space-y-5 bg-white">
+      <div className="space-y-3">
         <InputField
           id="name"
           name="name"
           type="text"
           value={formData.name}
           onChange={handleChange}
-          label="Name"
+          isLoading={isLoading}
+          label={texts.nameLabel}
         />
         <InputField
           id="email"
@@ -112,7 +123,8 @@ const SignupForm = () => {
           type="email"
           value={formData.email}
           onChange={handleChange}
-          label="Email"
+          isLoading={isLoading}
+          label={texts.emailLabel}
         />
         <InputField
           id="password"
@@ -120,7 +132,8 @@ const SignupForm = () => {
           type="password"
           value={formData.password}
           onChange={handleChange}
-          label="Password"
+          isLoading={isLoading}
+          label={texts.passwordLabel}
         />
         <InputField
           id="password-confirm"
@@ -128,11 +141,12 @@ const SignupForm = () => {
           type="password"
           value={formData.passwordConfirm}
           onChange={handleChange}
-          label="Confirm Password"
+          isLoading={isLoading}
+          label={texts.confirmPasswordLabel}
         />
       </div>
 
-      <button
+      {/* <button
         type="button"
         onClick={handleSendCode}
         className="mt-4 inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition duration-150 ease-in-out hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -155,13 +169,14 @@ const SignupForm = () => {
         >
           Verify Code
         </button>
-      </div>
+      </div> */}
 
       <button
         type="submit"
-        className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition duration-150 ease-in-out hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        disabled={isLoading}
+        className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-md font-medium text-white shadow-sm transition duration-150 ease-in-out hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
       >
-        Sign Up
+        {isLoading ? texts.signingUp : texts.signUpButton}
       </button>
 
       {successMessage && (

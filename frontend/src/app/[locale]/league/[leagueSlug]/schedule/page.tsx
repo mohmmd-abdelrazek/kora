@@ -1,67 +1,50 @@
-"use client";
-
-import { useSchedule } from "@/src/services/queries";
-import LeagueButton from "@/src/components/LeagueButton";
-import LoadingIndicator from "@/src/components/LoadingIndicator";
+import LeagueButton from "@/src/components/schedule/LeagueButton";
+import ScheduleTable from "@/src/components/schedule/ScheduleTable";
+import { useTranslations } from "next-intl";
 
 const SchedulePage = () => {
-  const { data: schedule, isLoading, error } = useSchedule(); // Update the URL to your API endpoint
-  
-  console.log(schedule)
-  // const schedule = scheduleData?.schedule;
-  if (isLoading) return <LoadingIndicator />;
-  if (error)
-  return <div className="flex-1">{error.response?.data.message || "Failed to load teams."}</div>;
+  const t = useTranslations("schedule");
 
   return (
-    <div className="responsive-container py-8">
-      <h1 className="mb-8 text-center text-2xl font-bold">League Schedule</h1>
-      <div className="overflow-x-auto">
+    <div className="responsive-container px-4 py-2 flex-1">
+      <h1 className="mb-8 text-center text-3xl font-semibold text-gray-800 sm:text-4xl">
+        {t("title")}
+      </h1>
+      <div className="overflow-x-auto rounded-lg shadow">
         <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
           <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
-                Round
+                {t("round")}
               </th>
               <th scope="col" className="px-6 py-3">
-                Home Team
+                {t("homeTeam")}
               </th>
               <th scope="col" className="px-6 py-3">
-                Away Team
+                {t("awayTeam")}
               </th>
               <th scope="col" className="px-6 py-3">
-                Playground
+                {t("playground")}
               </th>
               <th scope="col" className="px-6 py-3">
-                Start Time
+                {t("startTime")}
               </th>
               <th scope="col" className="px-6 py-3">
-                End Time
+                {t("endTime")}
               </th>
               <th scope="col" className="px-6 py-3">
-                Type
+                {t("type")}
               </th>
             </tr>
           </thead>
-          <tbody>
-            {schedule?.map((match: any, index: any) => (
-              <tr
-                key={index}
-                className="border-b bg-white dark:border-gray-700 dark:bg-gray-800"
-              >
-                <td className="px-6 py-4">{match.round}</td>
-                <td className="px-6 py-4">{match.homeTeam}</td>
-                <td className="px-6 py-4">{match.awayTeam}</td>
-                <td className="px-6 py-4">{match.playground}</td>
-                <td className="px-6 py-4">{match.startTime}</td>
-                <td className="px-6 py-4">{match.endTime}</td>
-                <td className="px-6 py-4">{match.type}</td>
-              </tr>
-            ))}
+          <tbody className="bg-white dark:bg-gray-800">
+            <ScheduleTable />
           </tbody>
         </table>
       </div>
-      <LeagueButton />
+      <div className="mt-6 flex justify-center">
+        <LeagueButton text={t("tooltip")} />
+      </div>
     </div>
   );
 };

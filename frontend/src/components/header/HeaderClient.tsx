@@ -4,9 +4,11 @@ import { useAuth } from "../../services/queries";
 import LoadingIndicator from "../LoadingIndicator";
 import { axiosInstance } from "../../services/fetcher";
 import { HeaderTextProps } from "../../types/textProps";
+import { useRouter } from "next/navigation";
 
 const Header = (texts: HeaderTextProps) => {
   const { data, isLoading, error } = useAuth();
+const router = useRouter();
 
   if (isLoading) return <LoadingIndicator />;
   if (error)
@@ -19,7 +21,7 @@ const Header = (texts: HeaderTextProps) => {
   const handleLogout = async () => {
     try {
       const result = await axiosInstance("/auth/logout");
-      window.location.href = "/";
+      router.refresh();
     } catch (error) {
       console.error("Logout failed:", error);
     }
@@ -31,19 +33,19 @@ const Header = (texts: HeaderTextProps) => {
         <>
           <Link
             href="/create"
-            className="px-2 py-1 font-bold transition-colors hover:text-gray-300"
+            className="transition-colors hover:text-gray-300"
           >
             {texts.create}
           </Link>
           <Link
-            href="/my-pages"
-            className="px-2 py-1 font-bold transition-colors hover:text-gray-300"
+            href="/my-leagues"
+            className="transition-colors hover:text-gray-300"
           >
             {texts.myLeagues}
           </Link>
           <button
             onClick={handleLogout}
-            className="focus:shadow-outline rounded bg-red-500 px-2 py-1 font-bold text-white transition-colors hover:bg-red-700 focus:outline-none"
+            className="text-sm focus:shadow-outline rounded bg-red-500 px-2 py-1 font-bold text-white transition-colors hover:bg-red-700 focus:outline-none"
           >
             {texts.logOut}
           </button>
@@ -52,13 +54,13 @@ const Header = (texts: HeaderTextProps) => {
         <>
           <Link
             href="/signin"
-            className="px-2 py-1 font-bold transition-colors hover:text-gray-300"
+            className="transition-colors hover:text-gray-300"
           >
             {texts.signIn}
           </Link>
           <Link
             href="/signup"
-            className="focus:shadow-outline rounded bg-blue-500 px-2 py-1 font-bold text-white transition-colors hover:bg-blue-700 focus:outline-none"
+            className="text-md focus:shadow-outline rounded bg-blue-500 px-2 py-1 font-bold text-white transition-colors hover:bg-blue-700 focus:outline-none"
           >
             {texts.signUp}
           </Link>

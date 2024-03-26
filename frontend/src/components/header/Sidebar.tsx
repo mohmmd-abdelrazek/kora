@@ -8,12 +8,14 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocale } from "next-intl";
 import { SidebarButton } from "./SidebarButton";
 import { HeaderTextProps } from "@/src/types/textProps";
+import { useRouter } from "@/src/navigation";
 
 const Sidebar = (texts: HeaderTextProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const { data, error } = useAuth();
   const sidebarRef = useRef<HTMLDivElement>(null);
   const locale = useLocale();
+  const router = useRouter();
 
   const handleClickOutside = useCallback(
     (event: MouseEvent) => {
@@ -46,7 +48,7 @@ const Sidebar = (texts: HeaderTextProps) => {
   const handleLogout = async () => {
     try {
       const result = await axiosInstance("/auth/logout");
-      window.location.href = "/";
+      router.refresh();
       setIsOpen(false);
     } catch (error) {
       console.error("Logout failed:", error);
@@ -58,10 +60,10 @@ const Sidebar = (texts: HeaderTextProps) => {
       ref={sidebarRef}
       className={clsx(
         "fixed top-0 z-50 h-screen w-3/5 bg-gray-700 p-4 text-white shadow-lg md:hidden",
-        locale === "en" ? "right-0" : "left-0",
+        locale === "ar" ? "left-0" : "right-0",
       )}
     >
-      <nav className="flex flex-col items-center justify-start gap-4">
+      <nav className="mt-12 flex flex-col items-center justify-start gap-6">
         <Link
           onClick={() => setIsOpen(false)}
           href="/"
@@ -80,7 +82,7 @@ const Sidebar = (texts: HeaderTextProps) => {
             </Link>
             <Link
               onClick={() => setIsOpen(false)}
-              href="/my-pages"
+              href="/my-leagues"
               className="transition-colors hover:text-gray-300"
             >
               {texts.myLeagues}

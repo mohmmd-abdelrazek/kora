@@ -1,7 +1,7 @@
 export const SidebarButton = ({ onClick }: { onClick: () => void }) => {
   return (
     <button
-      className="rounded-md bg-gray-700 px-2 py-1 transition-colors hover:bg-gray-600 md:hidden"
+      className="text-md rounded-md bg-gray-700 px-2 py-1 transition-colors hover:bg-gray-600 md:hidden"
       onClick={onClick}
     >
       <svg
