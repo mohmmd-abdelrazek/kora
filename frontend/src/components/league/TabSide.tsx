@@ -60,7 +60,7 @@ const TabSide = (texts: LeagueTextProps) => {
         </h2>
         {isOwner && <ShareButton texts={texts} />}
       </div>
-      <ul className={clsx("team-list flex h-72 flex-col gap-4 overflow-y-auto rounded-xl px-4 py-2 text-sm font-medium text-text max-sm:h-auto max-sm:flex-row max-sm:overflow-x-auto sm:w-fit dark:text-gray-400", locale === "ar" ? "ltr" : "rtl")}>
+      <ul className={clsx("team-list flex h-72 flex-col gap-4 overflow-y-auto rounded-xl px-4 max-sm:py-4 text-sm font-medium text-text max-sm:h-auto max-sm:flex-row max-sm:overflow-x-auto sm:w-fit dark:text-gray-400", locale === "ar" ? "ltr" : "rtl")}>
         {teams.map((team: Team) => (
           <Tab
             key={team.team_id}
