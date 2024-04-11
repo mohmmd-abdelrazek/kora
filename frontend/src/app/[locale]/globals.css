@@ -49,11 +49,15 @@
   }
 
   .rtl {
+    @media (min-width: 640px) {
     direction: rtl;
+    }
   }
 
   .ltr {
+    @media (min-width: 640px) {
     direction: ltr;
+    }
   }
 
   .team-list::-webkit-scrollbar {
