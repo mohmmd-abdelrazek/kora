@@ -1,10 +1,10 @@
 "use client";
-import { Link } from "@/src/navigation";
-import { useAuth } from "../../services/queries";
-import LoadingIndicator from "../LoadingIndicator";
-import { axiosInstance } from "../../services/fetcher";
 import { HeaderTextProps } from "../../types/textProps";
-import { useRouter } from "next/navigation";
+import { axiosInstance } from "../../services/fetcher";
+import { useAuth } from "../../services/queries";
+import { useRouter } from "@/src/navigation";
+import { Link } from "@/src/navigation";
+import LoadingIndicator from "../LoadingIndicator";
 
 const Header = (texts: HeaderTextProps) => {
   const { data, isLoading, error } = useAuth();
@@ -21,7 +21,7 @@ const router = useRouter();
   const handleLogout = async () => {
     try {
       const result = await axiosInstance("/auth/logout");
-      router.refresh();
+      window.location.reload();
     } catch (error) {
       console.error("Logout failed:", error);
     }

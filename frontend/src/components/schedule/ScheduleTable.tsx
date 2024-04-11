@@ -1,8 +1,10 @@
 "use client";
 import { useSchedule } from "@/src/services/queries";
 import LoadingIndicator from "@/src/components/LoadingIndicator";
+import { useLocale } from "next-intl";
 
 const ScheduleTable = () => {
+  const locale = useLocale();
   const { data: schedule, isLoading, error } = useSchedule();
 
   if (isLoading || error) {
@@ -14,6 +16,11 @@ const ScheduleTable = () => {
       </tr>
     );
   }
+const formatter = new Intl.DateTimeFormat(locale, {
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: true
+});
 
   return (
     <>
@@ -23,8 +30,8 @@ const ScheduleTable = () => {
           <td className="px-6 py-4">{match.homeTeam}</td>
           <td className="px-6 py-4">{match.awayTeam}</td>
           <td className="px-6 py-4">{match.playground}</td>
-          <td className="px-6 py-4">{match.startTime}</td>
-          <td className="px-6 py-4">{match.endTime}</td>
+          <td className="px-6 py-4">{formatter.format(new Date(match.startTime))}</td>
+          <td className="px-6 py-4">{formatter.format(new Date(match.endTime))}</td>
           <td className="px-6 py-4">{match.type}</td>
         </tr>
       ))}

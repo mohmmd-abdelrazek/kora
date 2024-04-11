@@ -137,8 +137,7 @@ export const generateSchedule = async (req: Request, res: Response) => {
     let currentTime = new Date(startTime);
     const endTime = new Date(currentTime.getTime() + totalPlayTimeMs);
 
-    const teamsQuery =
-      "SELECT * FROM teams WHERE league_id = $1 ORDER BY team_id";
+    const teamsQuery = "SELECT * FROM teams WHERE league_id = $1 ORDER BY team_id";
     const teamsRes = await pool.query(teamsQuery, [leagueId]);
     let teams = teamsRes.rows;
 
@@ -149,18 +148,33 @@ export const generateSchedule = async (req: Request, res: Response) => {
     const schedule = [];
     let round = 1;
 
-    for (let currentRound = 0; ; currentRound++) {
-      for (let match = 0; match < teams.length / 2; match++) {
-        if (currentTime.getTime() + matchTotalDurationMs > endTime.getTime())
-          break;
+    // Track the next available time for each playground
+    const playgroundAvailability = new Array(numberOfPlaygrounds).fill(new Date(startTime));
 
+    for (let currentRound = 0; ; currentRound++) {
+      let matchesScheduledInRound = 0;
+
+      for (let match = 0; match < teams.length / 2; match++) {
         const homeTeam = teams[match];
         const awayTeam = teams[teams.length - 1 - match];
 
         if (homeTeam.team_id === "bye" || awayTeam.team_id === "bye") continue; // Skip "bye" matches
 
-        const playgroundIndex = match % numberOfPlaygrounds;
-        const playgroundName = `Playground ${playgroundIndex + 1}`;
+        // Find the next available playground
+        let nextAvailablePlaygroundIndex = playgroundAvailability.findIndex(
+          time => time <= currentTime
+        );
+        if (nextAvailablePlaygroundIndex === -1) {
+          // If no playground is available yet, find the earliest available
+          nextAvailablePlaygroundIndex = playgroundAvailability
+            .map(time => time.getTime())
+            .indexOf(Math.min(...playgroundAvailability.map(time => time.getTime())));
+          currentTime = new Date(Math.min(...playgroundAvailability.map(time => time.getTime())));
+        }
+
+        if (currentTime.getTime() + matchTotalDurationMs > endTime.getTime()) break;
+
+        const playgroundName = `P${nextAvailablePlaygroundIndex + 1}`;
 
         schedule.push({
           round,
@@ -168,20 +182,21 @@ export const generateSchedule = async (req: Request, res: Response) => {
           awayTeam: awayTeam.name,
           playground: playgroundName,
           startTime: new Date(currentTime).toLocaleString(),
-          endTime: new Date(
-            currentTime.getTime() + matchDuration * 60000
-          ).toLocaleString(),
+          endTime: new Date(currentTime.getTime() + matchDuration * 60000).toLocaleString(),
           type: "Match",
         });
 
-        currentTime = new Date(currentTime.getTime() + matchTotalDurationMs);
+        // Update the next available time for this playground
+        playgroundAvailability[nextAvailablePlaygroundIndex] = new Date(currentTime.getTime() + matchTotalDurationMs);
+        matchesScheduledInRound++;
+      }
+
+      if (matchesScheduledInRound === 0 || currentTime.getTime() + matchTotalDurationMs > endTime.getTime()) {
+        break;
       }
 
       teams = [teams[0], ...teams.slice(-1), ...teams.slice(1, -1)];
-
       round++;
-      if (currentTime.getTime() + matchTotalDurationMs > endTime.getTime())
-        break;
     }
 
     res.json(schedule);
@@ -190,3 +205,4 @@ export const generateSchedule = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Failed to generate schedule" });
   }
 };
+

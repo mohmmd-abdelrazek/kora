@@ -48,7 +48,7 @@ const Sidebar = (texts: HeaderTextProps) => {
   const handleLogout = async () => {
     try {
       const result = await axiosInstance("/auth/logout");
-      router.refresh();
+      window.location.reload();
       setIsOpen(false);
     } catch (error) {
       console.error("Logout failed:", error);

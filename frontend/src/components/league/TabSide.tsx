@@ -5,15 +5,18 @@ import { useIsOwner } from "@/src/hooks/useIsOwner";
 import { useLeague, useTeams } from "@/src/services/queries";
 import { useSearchParams } from "next/navigation";
 import { usePathname, useRouter } from "@/src/navigation";
+import { LeagueTextProps } from "@/src/types/textProps";
+import { useLocale } from "next-intl";
 import Image from "next/image";
 import ball from "@/public/icons/football.png";
 import LoadingIndicator from "@/src/components/LoadingIndicator";
 import ShareButton from "@/src/components/league/ShareButton";
 import Tab from "@/src/components/league/Tab";
-import { LeagueTextProps } from "@/src/types/textProps";
+import clsx from "clsx";
 
 const TabSide = (texts: LeagueTextProps) => {
   const { data: teams, isLoading, error } = useTeams();
+  const locale = useLocale(); 
   const {
     data: league,
     isLoading: leagueLoading,
@@ -57,7 +60,7 @@ const TabSide = (texts: LeagueTextProps) => {
         </h2>
         {isOwner && <ShareButton texts={texts} />}
       </div>
-      <ul className="team-list flex h-72 flex-col gap-4 overflow-y-auto rounded-xl px-4 py-2 text-sm font-medium text-text max-sm:h-auto max-sm:flex-row max-sm:overflow-x-auto sm:w-fit dark:text-gray-400">
+      <ul className={clsx("team-list flex h-72 flex-col gap-4 overflow-y-auto rounded-xl px-4 py-2 text-sm font-medium text-text max-sm:h-auto max-sm:flex-row max-sm:overflow-x-auto sm:w-fit dark:text-gray-400", locale === "ar" ? "ltr" : "rtl")}>
         {teams.map((team: Team) => (
           <Tab
             key={team.team_id}
