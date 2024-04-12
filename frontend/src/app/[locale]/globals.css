@@ -50,13 +50,13 @@
 
   .rtl {
     @media (min-width: 640px) {
-    direction: rtl;
+      direction: rtl;
     }
   }
 
   .ltr {
     @media (min-width: 640px) {
-    direction: ltr;
+      direction: ltr;
     }
   }
 
