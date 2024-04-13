@@ -101,6 +101,7 @@ const PlayerInput = ({ teamId, playerIndex, texts }: playerProps) => {
       );
       setIsEditMode(false);
       setIsDisabled(true);
+      setOriginalValues({name: playerName, position: selectedPosition})
       console.log("Edit successful", response.data);
     } catch (error) {
       console.error("Error editing data:", error);

@@ -83,7 +83,7 @@ export const signup = async (req: Request, res: Response) => {
     const { id, name: userName, email: userEmail } = newUser.rows[0];
     res.status(201).json({
       message: "Signup successful",
-      user: { id, name: userName, email: userEmail },
+      user: { id, userName, userEmail },
     });
   } catch (error) {
     console.error(error);
@@ -92,7 +92,6 @@ export const signup = async (req: Request, res: Response) => {
 };
 
 export const login = (req: Request, res: Response) => {
-  console.log('Sign-in request received:', req.body);
   if (req.user) {
     res.status(200).json({ message: "Login successful", user: req.user });
   } else {

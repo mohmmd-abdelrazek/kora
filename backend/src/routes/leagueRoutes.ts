@@ -5,7 +5,7 @@ import { isAuthenticated } from "../middleware/middleware";
 const router = express.Router();
 
 router.post("/league", isAuthenticated, leagueController.createLeague);
-router.get("/leagues", leagueController.getLeagues);
+router.get("/leagues",isAuthenticated, leagueController.getLeagues);
 router.get("/league/:leagueId", leagueController.getLeague);
 router.get("/league/:leagueId/schedule", leagueController.generateSchedule);
 

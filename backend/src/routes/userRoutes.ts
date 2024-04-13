@@ -1,6 +1,6 @@
 import express from "express";
 import * as userController from "../controllers/userController";
-import { isAuthenticated } from "../middleware/middleware"; // Middleware to check if the user is authenticated
+import { isAuthenticated } from "../middleware/middleware";
 
 const router = express.Router();
 

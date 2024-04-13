@@ -158,7 +158,7 @@ export const generateSchedule = async (req: Request, res: Response) => {
         const homeTeam = teams[match];
         const awayTeam = teams[teams.length - 1 - match];
 
-        if (homeTeam.team_id === "bye" || awayTeam.team_id === "bye") continue; // Skip "bye" matches
+        if (homeTeam.team_id === "bye" || awayTeam.team_id === "bye") continue;
 
         // Find the next available playground
         let nextAvailablePlaygroundIndex = playgroundAvailability.findIndex(
@@ -183,7 +183,6 @@ export const generateSchedule = async (req: Request, res: Response) => {
           playground: playgroundName,
           startTime: new Date(currentTime).toLocaleString(),
           endTime: new Date(currentTime.getTime() + matchDuration * 60000).toLocaleString(),
-          type: "Match",
         });
 
         // Update the next available time for this playground

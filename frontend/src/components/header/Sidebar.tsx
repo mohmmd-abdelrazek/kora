@@ -8,14 +8,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocale } from "next-intl";
 import { SidebarButton } from "./SidebarButton";
 import { HeaderTextProps } from "@/src/types/textProps";
-import { useRouter } from "@/src/navigation";
 
 const Sidebar = (texts: HeaderTextProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const { data, error } = useAuth();
   const sidebarRef = useRef<HTMLDivElement>(null);
   const locale = useLocale();
-  const router = useRouter();
 
   const handleClickOutside = useCallback(
     (event: MouseEvent) => {

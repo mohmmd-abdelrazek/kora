@@ -10,7 +10,7 @@ const ScheduleTable = () => {
   if (isLoading || error) {
     return (
       <tr className="h-32">
-        <td colSpan={7}>
+        <td colSpan={6}>
           {isLoading ? <LoadingIndicator /> : error.response?.data.message || "Failed to load schedule."}
         </td>
       </tr>
@@ -25,14 +25,13 @@ const formatter = new Intl.DateTimeFormat(locale, {
   return (
     <>
       {schedule?.map((match: any, index: any) => (
-        <tr key={index} className="border-b dark:border-gray-700">
-          <td className="whitespace-nowrap px-6 py-4">{match.round}</td>
-          <td className="px-6 py-4">{match.homeTeam}</td>
-          <td className="px-6 py-4">{match.awayTeam}</td>
-          <td className="px-6 py-4">{match.playground}</td>
-          <td className="px-6 py-4">{formatter.format(new Date(match.startTime))}</td>
-          <td className="px-6 py-4">{formatter.format(new Date(match.endTime))}</td>
-          <td className="px-6 py-4">{match.type}</td>
+        <tr key={index} className="border-b text-md font-semibold dark:border-gray-700">
+          <td className="whitespace-nowrap px-4 py-3">{match.round}</td>
+          <td className="px-4 py-3">{match.homeTeam}</td>
+          <td className="px-4 py-3">{match.awayTeam}</td>
+          <td className="px-4 py-3">{match.playground}</td>
+          <td className="px-4 py-3">{formatter.format(new Date(match.startTime))}</td>
+          <td className="px-4 py-3">{formatter.format(new Date(match.endTime))}</td>
         </tr>
       ))}
     </>

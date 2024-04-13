@@ -1,6 +1,6 @@
 import { useRouter } from '@/src/navigation';
-import { useAuth } from '../services/queries'; // Adjust the import path as necessary
-import LoadingIndicator from '../components/LoadingIndicator'; // Adjust the import path as necessary
+import { useAuth } from '../services/queries';
+import LoadingIndicator from '../components/LoadingIndicator';
 import { useEffect } from 'react';
 
 // Define a generic type for props that could be passed to any component
@@ -16,13 +16,11 @@ const withAuth = <P extends WithAuthProps>(WrappedComponent: React.ComponentType
 
     useEffect(() => {
       if (!data?.isAuthenticated && !isLoading) {
-        // Redirect to signin page if not authenticated and not loading
         router.push('/signin');
       }
     }, [data?.isAuthenticated, isLoading, router]);
 
     if (isLoading) {
-      // Show loading indicator while authentication status is being determined
       return <LoadingIndicator />;
     }
 
@@ -32,7 +30,6 @@ const withAuth = <P extends WithAuthProps>(WrappedComponent: React.ComponentType
       return null;
     }
 
-    // If authenticated, render the wrapped component with all its props
     return <WrappedComponent {...props} />;
   };
 

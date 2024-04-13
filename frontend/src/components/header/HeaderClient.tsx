@@ -8,7 +8,7 @@ import LoadingIndicator from "../LoadingIndicator";
 
 const Header = (texts: HeaderTextProps) => {
   const { data, isLoading, error } = useAuth();
-const router = useRouter();
+  const router = useRouter();
 
   if (isLoading) return <LoadingIndicator />;
   if (error)
@@ -45,7 +45,7 @@ const router = useRouter();
           </Link>
           <button
             onClick={handleLogout}
-            className="text-sm focus:shadow-outline rounded bg-red-500 px-2 py-1 font-bold text-white transition-colors hover:bg-red-700 focus:outline-none"
+            className="focus:shadow-outline rounded bg-red-500 px-2 py-1 text-sm font-bold text-white transition-colors hover:bg-red-700 focus:outline-none"
           >
             {texts.logOut}
           </button>

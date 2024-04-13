@@ -2,8 +2,8 @@ import { LeagueTextProps } from "@/src/types/textProps";
 
 const ShareButton = ({texts}: {texts: LeagueTextProps}) => {
   const shareOnWhatsApp = () => {
-    const text = "Check out this amazing page!";
-    const url = typeof window !== "undefined" ? window.location.href : ""; // Gets the current page URL safely
+    const text = "Register in this amazing League!";
+    const url = typeof window !== "undefined" ? window.location.href : ""; 
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text + " " + url)}`;
 
     window.open(whatsappUrl, "_blank");
@@ -11,9 +11,9 @@ const ShareButton = ({texts}: {texts: LeagueTextProps}) => {
 
   const sharePage = async () => {
     const shareData = {
-      title: "Amazing Page",
-      text: "Check out this amazing page!",
-      url: typeof window !== "undefined" ? window.location.href : "", // Current page URL
+      title: "League Page",
+      text: "Register in this amazing League!",
+      url: typeof window !== "undefined" ? window.location.href : "", 
     };
 
     try {

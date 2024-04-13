@@ -55,8 +55,8 @@ const HomeClient = (texts: HomeTextProps) => {
 
       <p className="mt-3 text-2xl">
         {data?.isAuthenticated
-          ? `${texts.startCreating}`
-          : `${texts.signInToCreate}`}
+          ? texts.startCreating
+          : texts.signInToCreate}
       </p>
       <p className="text-lg text-gray-600">{texts.easyManage}</p>
     </main>
