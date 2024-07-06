@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 // Construct the path to your CA certificate file
-const caCertPath = path.resolve(__dirname, "../certs/ca.pem");
+const caCertPath = path.resolve(__dirname, process.env.CERT_PATH || "../certs/ca.pem");
 
 // Read the CA certificate file
 const caCert = fs.readFileSync(caCertPath).toString();
