@@ -2,20 +2,21 @@ import { Pool } from "pg";
 import fs from "fs";
 import path from "path";
 
-const connectionString = process.env.DATABASE_URL;
+// Construct the path to your CA certificate file
+const caCertPath = path.resolve(__dirname, "../certs/ca.pem");
 
-if (!connectionString) {
-  throw new Error("DATABASE_URL is not defined");
-}
-
-// Use path.resolve to construct an absolute path to ca.pem
-const caCertPath = path.resolve(__dirname, "./ca.pem");
+// Read the CA certificate file
+const caCert = fs.readFileSync(caCertPath).toString();
 
 const pool = new Pool({
-  connectionString: connectionString,
-  ssl: { 
-    ca: fs.readFileSync(caCertPath),
-    rejectUnauthorized: process.env.EXPRESS_ENV === "production"
+  user: process.env.PG_USER,
+  host: process.env.PG_HOST,
+  database: process.env.PG_DATABASE,
+  password: process.env.PG_PASSWORD,
+  port: Number(process.env.PG_PORT),
+  ssl: {
+    rejectUnauthorized: true,
+    ca: caCert,
   },
 });
 
